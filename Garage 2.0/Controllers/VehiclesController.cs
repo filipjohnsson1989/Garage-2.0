@@ -8,6 +8,8 @@ using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
+using Garage_2._0.Models.ViewModels;
+
 
 namespace Garage_2._0.Controllers
 {
@@ -23,7 +25,41 @@ namespace Garage_2._0.Controllers
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
-            return View(await _context.Vehicle.ToListAsync());
+
+            var res =  await _context.Vehicle
+                .Where(p=> p.CheckOut == null)
+                .Select(v => new ParkingDetailModel
+                {
+                    Id = v.Id,
+                    Brand = v.Brand,
+                    CheckIn = v.CheckIn,
+                    CheckOut = v.CheckOut,
+                    Model = v.Model,
+                    RegNo = v.RegNo,
+                    VehicleType = v.VehicleType,
+                    Wheels = v.Wheels,
+                }).ToListAsync();
+           
+            //return View(await _context.Vehicle.ToListAsync());
+            return View(nameof(Index), res);
+        }
+
+        public async Task<IActionResult> Overview()
+        {
+
+            var res = await _context.Vehicle
+                .Where(predicate => predicate.CheckOut == null)
+                .Select(v => new OverviewModel
+                {
+                    Id = v.Id,
+                    VehicleType = v.VehicleType,
+                    RegNo = v.RegNo,
+                    CheckIn = v.CheckIn,
+
+                }).ToListAsync();
+
+            //return View(nameof(ParkingOverView), res);
+            return View("ParkingOverView", res);
         }
 
         // GET: Vehicles/Details/5
@@ -40,8 +76,19 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
+            var model = new ParkingDetailModel
+            {
+                Brand = vehicle.Brand,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = vehicle.CheckOut,
+                Id = vehicle.Id,
+                Model = vehicle.Model,
+                RegNo = vehicle.RegNo,
+                VehicleType = vehicle.VehicleType,
+                Wheels = vehicle.Wheels
+            };
 
-            return View(vehicle);
+            return View(model);
         }
 
         // GET: Vehicles/Create
@@ -55,11 +102,22 @@ namespace Garage_2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,CheckIn,CheckOut")] Vehicle vehicle)
+        public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType/*,CheckIn,CheckOut*/")] ParkingDetailModel vehicle)
         {
             if (ModelState.IsValid)
             {
-                _context.Add(vehicle);
+                //vehicle.CheckIn = DateTime.Now;
+                vehicle.VehicleType = Common.VehicleTypes.Car;
+
+                var vehicleEntiy = new Vehicle { 
+                    RegNo = vehicle.RegNo,
+                    Brand = vehicle.Brand,
+                    Model = vehicle.Model,
+                    Wheels = vehicle.Wheels,
+                    VehicleType = vehicle.VehicleType,
+                    CheckIn = DateTime.Now
+                };
+                _context.Add(vehicleEntiy);
                 await _context.SaveChangesAsync();
                 return RedirectToAction(nameof(Index));
             }
@@ -79,7 +137,18 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
-            return View(vehicle);
+            var model = new ParkingDetailModel
+            {
+                Id = vehicle.Id,
+                RegNo = vehicle.RegNo,
+                VehicleType = vehicle.VehicleType,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Wheels = vehicle.Wheels,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = vehicle.CheckOut
+            };
+            return View(model);
         }
 
         // POST: Vehicles/Edit/5
@@ -87,7 +156,7 @@ namespace Garage_2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,CheckIn,CheckOut")] Vehicle vehicle)
+        public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,CheckIn,CheckOut")] ParkingDetailModel vehicle)
         {
             if (id != vehicle.Id)
             {
@@ -98,7 +167,16 @@ namespace Garage_2._0.Controllers
             {
                 try
                 {
-                    _context.Update(vehicle);
+                    var vehicleEntiy = new Vehicle
+                    {
+                        RegNo = vehicle.RegNo,
+                        Brand = vehicle.Brand,
+                        Model = vehicle.Model,
+                        Wheels = vehicle.Wheels,
+                        VehicleType = vehicle.VehicleType,
+                        CheckIn = DateTime.Now
+                    };
+                    _context.Update(vehicleEntiy);
                     await _context.SaveChangesAsync();
                 }
                 catch (DbUpdateConcurrencyException)
@@ -131,8 +209,18 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
-
-            return View(vehicle);
+            var parkedVehicle = new ParkingDetailModel { 
+                Id = vehicle.Id,
+                VehicleType = vehicle.VehicleType,
+                RegNo = vehicle.RegNo,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Wheels= vehicle.Wheels,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = DateTime.Now
+                
+            };
+            return View(parkedVehicle);
         }
 
         // POST: Vehicles/Delete/5
