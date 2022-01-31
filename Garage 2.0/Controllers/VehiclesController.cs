@@ -62,11 +62,11 @@ namespace Garage_2._0.Controllers
             return View("ParkingOverView", res);
         }
 
-        public async Task<IActionResult> Search(string searchWord, int vehicleType)
+        public async Task<IActionResult> Search(string regNo, int vehicleType)
         {
-            var query = string.IsNullOrWhiteSpace(searchWord) ?
+            var query = string.IsNullOrWhiteSpace(regNo) ?
                             _context.Vehicle :
-                            _context.Vehicle.Where(v => v.RegNo.StartsWith(searchWord));
+                            _context.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
 
             query = vehicleType == null ?
                              query :
