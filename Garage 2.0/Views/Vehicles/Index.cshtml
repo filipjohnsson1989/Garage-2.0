@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
+﻿@using Garage_2._0.Common
+@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -9,6 +10,22 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<form asp-action="Filter">
+    <div class="input-group mb-3">
+        <input type="text" class="form-control" name="regNo" placeholder="Search on reg No" />
+        <div class="input-group-append">
+            <select class="form-control" name="vehicleType" asp-items="@Html.GetEnumSelectList<VehicleTypes>()">
+                <option selected="selected" value="">Please select</option>
+            </select>
+        </div>
+        <div class="input-group-append">
+            <button type="submit" class="btn btn-primary"><i class="fa fa-search">&emsp;Search</i></button>
+        </div>
+    </div>
+</form>
+
+
 <table class="table">
     <thead>
         <tr>
