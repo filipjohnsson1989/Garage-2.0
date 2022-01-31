@@ -72,7 +72,6 @@ namespace Garage_2._0.Controllers
                              query :
                              query.Where(v => (int)v.VehicleType == vehicleType);
 
-
             var viewModel = query.Select(v => new ParkingDetailModel
             {
                 Id = v.Id,
