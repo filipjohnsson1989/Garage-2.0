@@ -7,30 +7,32 @@ namespace Garage_2._0.Models.ViewModels
     {
         public int Id { get; set; }
 
+        [Display(Name = "Typ")]
         public VehicleTypes VehicleType { get; set; }
 
         [Required]
+        [Display(Name = "Reg num")]
         public string RegNo { get; set; }
 
 
-        //[Range(1, 14)]
-        //public int Wheels { get; set; }
-
-        //public string Brand { get; set; }
-
-        //public string Model { get; set; }
-
-
+        [Display(Name = "Incheckningstid")]
         public DateTime CheckIn { get; set; }
 
-        //public TimeSpan ParkingTime => (DateTime.Now - CheckIn).TotalHours;
-        //public double ParkingTime => (DateTime.Now - CheckIn).TotalHours;
+        [Display(Name = "Parkerad tid")]
         public string ParkingTime
         {
             get
             {
-                TimeSpan timeSpan = (DateTime.Now - CheckIn);
-                return timeSpan.Days + " " + timeSpan.Hours + ":" + timeSpan.Minutes + " " + String.Format(" {0:C2}",(timeSpan.TotalMinutes * 10 / 60));
+                return Util.ParkingTimeString(CheckIn, DateTime.Now);
+            }
+        }
+
+        [Display(Name = "Aktuell kostnad")]
+        public string Price
+        {
+            get
+            {
+                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, DateTime.Now, 10.0));
             }
         }
     }
