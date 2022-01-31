@@ -1,10 +1,10 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
+﻿@model IEnumerable<Garage_2._0.Models.ViewModels.OverviewModel>
 
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Parkerade fordon";
 }
 
-<h1>Index</h1>
+<h1>Översikt över Parkerade fordon</h1>
 
 <p>
     <a asp-action="Create">Create New</a>
@@ -15,7 +15,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
-                        <th>
+            @* <th>
                 @Html.DisplayNameFor(model => model.Wheels)
                 </th>
                 <th>
@@ -23,17 +23,19 @@
                 </th>
                 <th>
                 @Html.DisplayNameFor(model => model.Model)
-                </th>
+                </th>*@
             <th>
                 @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CheckIn)
             </th>
-                        <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.CheckOut)
-                </th>
-
+                </th>*@
+            <th class="text-center">
+                @Html.DisplayNameFor(model => model.ParkingTime)
+            </th>
             <th></th>
         </tr>
     </thead>
@@ -44,7 +46,7 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.RegNo)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.Wheels)
                 </td>
                 <td>
@@ -52,17 +54,19 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.Model)
-                </td>
+                </td>*@
                 <td>
                     @Html.DisplayFor(modelItem => item.VehicleType)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CheckIn)
                 </td>
-                <td>
+                @*<td>
                     @Html.DisplayFor(modelItem => item.CheckOut)
+                </td>*@
+                <td class="text-end">
+                    @Html.DisplayFor(modelItem => item.ParkingTime)
                 </td>
-
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                     <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
