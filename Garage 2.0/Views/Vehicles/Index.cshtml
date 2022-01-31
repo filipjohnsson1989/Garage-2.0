@@ -1,4 +1,4 @@
-﻿@model IEnumerable<Garage_2._0.Models.Entities.Vehicle>
+﻿@model IEnumerable<Garage_2._0.Models.ViewModels.VehicleViewModel>
 
 @{
     ViewData["Title"] = "Index";
@@ -30,9 +30,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CheckIn)
             </th>
-            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.CheckOut)
-            </th>
+            </th>*@
             <th></th>
         </tr>
     </thead>
@@ -57,9 +57,9 @@
             <td>
                 @Html.DisplayFor(modelItem => item.CheckIn)
             </td>
-            <td>
+            @*<td>
                 @Html.DisplayFor(modelItem => item.CheckOut)
-            </td>
+            </td>*@
             <td>
                 <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
                 <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
