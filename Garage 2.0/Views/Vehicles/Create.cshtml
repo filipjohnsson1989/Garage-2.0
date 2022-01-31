@@ -34,11 +34,13 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
+                 <label asp-for="VehicleType" class="control-label"></label>
                 <div class="input-group-append">
                     <select class="form-control" asp-for="VehicleType" asp-items="Html.GetEnumSelectList<VehicleTypes>()">
                         <option selected="selected" value="">Please select</option>
                     </select>
                 </div>
+                <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
 
             @*                        <div class="form-group">
@@ -57,7 +59,7 @@
                 <span asp-validation-for="CheckOut" class="text-danger"></span>
                 </div>*@
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Parkera" class="btn btn-primary" />
             </div>
         </form>
     </div>
