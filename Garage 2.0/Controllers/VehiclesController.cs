@@ -26,8 +26,8 @@ namespace Garage_2._0.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var res =  await _context.Vehicle
-                .Where(p=> p.CheckOut == null)
+            var res = await _context.Vehicle
+                .Where(p => p.CheckOut == null)
                 .Select(v => new ParkingDetailModel
                 {
                     Id = v.Id,
@@ -39,7 +39,7 @@ namespace Garage_2._0.Controllers
                     VehicleType = v.VehicleType,
                     Wheels = v.Wheels,
                 }).ToListAsync();
-           
+
             //return View(await _context.Vehicle.ToListAsync());
             return View(nameof(Index), res);
         }
@@ -60,6 +60,23 @@ namespace Garage_2._0.Controllers
 
             //return View(nameof(ParkingOverView), res);
             return View("ParkingOverView", res);
+        }
+
+        public async Task<IActionResult> Ticket()
+        {
+            var res = await _context.Vehicle
+                .Where(predicate => predicate.CheckOut == null)
+                .Select(t => new TicketViewModel
+                {
+                    Id = t.Id,
+                    VehicleType = t.VehicleType,
+                    CheckIn = t.CheckIn,
+                    CheckOut = (DateTime)t.CheckOut,
+                    RegNo = t.RegNo
+
+                }).ToListAsync();
+
+            return View("Ticket", res);
         }
 
         // GET: Vehicles/Details/5
@@ -109,7 +126,7 @@ namespace Garage_2._0.Controllers
                 //vehicle.CheckIn = DateTime.Now;
                 vehicle.VehicleType = Common.VehicleTypes.Car;
 
-                var vehicleEntiy = new Vehicle { 
+                var vehicleEntiy = new Vehicle {
                     RegNo = vehicle.RegNo,
                     Brand = vehicle.Brand,
                     Model = vehicle.Model,
@@ -209,19 +226,49 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
-            var parkedVehicle = new ParkingDetailModel { 
+            var parkedVehicle = new ParkingDetailModel {
                 Id = vehicle.Id,
                 VehicleType = vehicle.VehicleType,
                 RegNo = vehicle.RegNo,
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
-                Wheels= vehicle.Wheels,
+                Wheels = vehicle.Wheels,
                 CheckIn = vehicle.CheckIn,
                 CheckOut = DateTime.Now
-                
+
             };
             return View(parkedVehicle);
         }
+
+        public async Task<IActionResult> Ticket(int? id) {
+            if(id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _context.Vehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var ticket = new TicketViewModel
+            {
+                Id = vehicle.Id,
+                VehicleType = vehicle.VehicleType,
+                RegNo = vehicle.RegNo,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Wheels = vehicle.Wheels,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = DateTime.Now
+
+            };
+            return View(ticket);
+        }
+
+        
 
         // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
