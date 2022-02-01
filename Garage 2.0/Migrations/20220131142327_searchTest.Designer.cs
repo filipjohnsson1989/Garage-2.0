@@ -11,9 +11,9 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace Garage_2._0.Migrations
 {
-    [DbContext(typeof(AppDbContext))]
-    [Migration("20220128141541_Init")]
-    partial class Init
+    [DbContext(typeof(Garage_2_0Context))]
+    [Migration("20220131142327_searchTest")]
+    partial class searchTest
     {
         protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
@@ -32,13 +32,17 @@ namespace Garage_2._0.Migrations
 
                     SqlServerPropertyBuilderExtensions.UseIdentityColumn(b.Property<int>("Id"), 1L, 1);
 
-                    b.Property<DateTime?>("CheckIn")
+                    b.Property<string>("Brand")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<DateTime>("CheckIn")
                         .HasColumnType("datetime2");
 
                     b.Property<DateTime?>("CheckOut")
                         .HasColumnType("datetime2");
 
-                    b.Property<string>("Color")
+                    b.Property<string>("Model")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -47,6 +51,9 @@ namespace Garage_2._0.Migrations
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<int>("VehicleType")
+                        .HasColumnType("int");
+
+                    b.Property<int>("Wheels")
                         .HasColumnType("int");
 
                     b.HasKey("Id");

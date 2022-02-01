@@ -1,4 +1,5 @@
-﻿@model Garage_2._0.Models.Entities.Vehicle
+﻿@using Garage_2._0.Common
+@model Garage_2._0.Models.ViewModels.ParkingDetailModel
 
 @{
     ViewData["Title"] = "Create";
@@ -23,20 +24,43 @@
                 <span asp-validation-for="RegNo" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="Color" class="control-label"></label>
-                <input asp-for="Color" class="form-control" />
-                <span asp-validation-for="Color" class="text-danger"></span>
+                <label asp-for="Wheels" class="control-label"></label>
+                <input asp-for="Wheels" class="form-control" />
+                <span asp-validation-for="Wheels" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Brand" class="control-label"></label>
+                <input asp-for="Brand" class="form-control" />
+                <span asp-validation-for="Brand" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Model" class="control-label"></label>
+                <input asp-for="Model" class="form-control" />
+                <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <div class="input-group-append">
+                    <select class="form-control" asp-for="VehicleType" asp-items="Html.GetEnumSelectList<VehicleTypes>()">
+                        <option selected="selected" value="">Please select</option>
+                    </select>
+                </div>
+            </div>
+
+            @*                        <div class="form-group">
+                <label asp-for="VehicleType" class="control-label"></label>
+                <select asp-for="VehicleType" class="form-control"></select>
+                <span asp-validation-for="VehicleType" class="text-danger"></span>
+                </div>*@
+            @*            <div class="form-group">
                 <label asp-for="CheckIn" class="control-label"></label>
                 <input asp-for="CheckIn" class="form-control" />
                 <span asp-validation-for="CheckIn" class="text-danger"></span>
-            </div>
-            <div class="form-group">
+                </div>
+                <div class="form-group">
                 <label asp-for="CheckOut" class="control-label"></label>
                 <input asp-for="CheckOut" class="form-control" />
                 <span asp-validation-for="CheckOut" class="text-danger"></span>
-            </div>
+                </div>*@
             <div class="form-group">
                 <input type="submit" value="Create" class="btn btn-primary" />
             </div>
@@ -49,5 +73,7 @@
 </div>
 
 @section Scripts {
-    @{await Html.RenderPartialAsync("_ValidationScriptsPartial");}
+    @{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
 }
