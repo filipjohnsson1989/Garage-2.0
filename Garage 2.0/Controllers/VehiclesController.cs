@@ -70,15 +70,15 @@ namespace Garage_2._0.Controllers
             return View("ParkingOverView", res);
         }
 
-        public async Task<IActionResult> Search(string regNo, int vehicleType)
+        public async Task<IActionResult> Search(string regNo, int? vehicleType)
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
                             _context.Vehicle :
-                            _context.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+                            _context.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
 
             query = vehicleType == null ?
                              query :
-                             query.Where(v => (int)v.VehicleType == vehicleType);
+                             query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
 
             var viewModel = query.Select(v => new ParkingDetailModel
             {
@@ -86,6 +86,10 @@ namespace Garage_2._0.Controllers
                 VehicleType = v.VehicleType,
                 RegNo = v.RegNo,
                 CheckIn = v.CheckIn,
+                Wheels = v.Wheels,
+                Brand = v.Brand,
+                Model = v.Model,
+                CheckOut = v.CheckOut
             });
             return View(nameof(Index), await viewModel.ToListAsync());
 
@@ -131,12 +135,10 @@ namespace Garage_2._0.Controllers
         // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType/*,CheckIn,CheckOut*/")] ParkingDetailModel vehicle)
+        public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] ParkingDetailModel vehicle)
         {
             if (ModelState.IsValid)
             {
-                //vehicle.CheckIn = DateTime.Now;
-                //vehicle.VehicleType = Common.VehicleTypes.Car;
 
                 var vehicleEntiy = new Vehicle
                 {
@@ -199,6 +201,7 @@ namespace Garage_2._0.Controllers
                 {
                     var vehicleEntiy = new Vehicle
                     {
+                        Id=vehicle.Id,
                         RegNo = vehicle.RegNo,
                         Brand = vehicle.Brand,
                         Model = vehicle.Model,
