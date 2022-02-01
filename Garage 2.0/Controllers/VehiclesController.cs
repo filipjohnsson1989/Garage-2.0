@@ -27,8 +27,8 @@ namespace Garage_2._0.Controllers
         public async Task<IActionResult> Index()
         {
 
-            var res =  await _context.Vehicle
-                .Where(p=> p.CheckOut == null)
+            var res = await _context.Vehicle
+                .Where(p => p.CheckOut == null)
                 .Select(v => new ParkingDetailModel
                 {
                     Id = v.Id,
@@ -130,7 +130,7 @@ namespace Garage_2._0.Controllers
                 //vehicle.CheckIn = DateTime.Now;
                 vehicle.VehicleType = Common.VehicleTypes.Car;
 
-                var vehicleEntiy = new Vehicle { 
+                var vehicleEntiy = new Vehicle {
                     RegNo = vehicle.RegNo,
                     Brand = vehicle.Brand,
                     Model = vehicle.Model,
@@ -230,19 +230,46 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
-            var parkedVehicle = new ParkingDetailModel { 
+            var parkedVehicle = new ParkingDetailModel {
                 Id = vehicle.Id,
                 VehicleType = vehicle.VehicleType,
                 RegNo = vehicle.RegNo,
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
-                Wheels= vehicle.Wheels,
+                Wheels = vehicle.Wheels,
                 CheckIn = vehicle.CheckIn,
                 CheckOut = DateTime.Now
-                
+
             };
             return View(parkedVehicle);
         }
+
+
+        public async Task<IActionResult> Ticket(int? id) {
+            
+
+            var vehicle = await _context.Vehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var ticketVehicle = new TicketViewModel
+            {
+                Id = vehicle.Id,
+                VehicleType = vehicle.VehicleType,
+                RegNo = vehicle.RegNo,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = DateTime.Now
+
+            };
+            return View(ticketVehicle);
+        }
+
+        
 
         // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]
