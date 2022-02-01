@@ -80,7 +80,6 @@ namespace Garage_2._0.Controllers
                 CheckIn = v.CheckIn,
             });
             return View(nameof(Index), await viewModel.ToListAsync());
-
         }
 
         // GET: Vehicles/Details/5
