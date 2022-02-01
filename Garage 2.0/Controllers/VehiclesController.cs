@@ -16,18 +16,26 @@ namespace Garage_2._0.Controllers
     public class VehiclesController : Controller
     {
         private readonly Garage_2_0Context _context;
+        private readonly IConfiguration _config;
+        private readonly double _parkingHourlyCost;
 
-        public VehiclesController(Garage_2_0Context context)
+        public VehiclesController(Garage_2_0Context context, IConfiguration config)
         {
             _context = context;
+            _config = config;
+
+            if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
+                _parkingHourlyCost = 0.0;
+            else
+                _parkingHourlyCost = timeRate;
         }
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
         {
 
-            var res =  await _context.Vehicle
-                .Where(p=> p.CheckOut == null)
+            var res = await _context.Vehicle
+                .Where(p => p.CheckOut == null)
                 .Select(v => new ParkingDetailModel
                 {
                     Id = v.Id,
@@ -39,7 +47,7 @@ namespace Garage_2._0.Controllers
                     VehicleType = v.VehicleType,
                     Wheels = v.Wheels,
                 }).ToListAsync();
-           
+
             //return View(await _context.Vehicle.ToListAsync());
             return View(nameof(Index), res);
         }
@@ -55,7 +63,7 @@ namespace Garage_2._0.Controllers
                     VehicleType = v.VehicleType,
                     RegNo = v.RegNo,
                     CheckIn = v.CheckIn,
-
+                    HourlyCost = _parkingHourlyCost
                 }).ToListAsync();
 
             //return View(nameof(ParkingOverView), res);
@@ -103,13 +111,14 @@ namespace Garage_2._0.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType/*,CheckIn,CheckOut*/")] ParkingDetailModel vehicle)
-        {
+        {//VehicleType
             if (ModelState.IsValid)
             {
                 //vehicle.CheckIn = DateTime.Now;
-                vehicle.VehicleType = Common.VehicleTypes.Car;
+                //vehicle.VehicleType = Common.VehicleTypes.Car;
 
-                var vehicleEntiy = new Vehicle { 
+                var vehicleEntiy = new Vehicle
+                {
                     RegNo = vehicle.RegNo,
                     Brand = vehicle.Brand,
                     Model = vehicle.Model,
@@ -209,16 +218,17 @@ namespace Garage_2._0.Controllers
             {
                 return NotFound();
             }
-            var parkedVehicle = new ParkingDetailModel { 
+            var parkedVehicle = new ParkingDetailModel
+            {
                 Id = vehicle.Id,
                 VehicleType = vehicle.VehicleType,
                 RegNo = vehicle.RegNo,
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
-                Wheels= vehicle.Wheels,
+                Wheels = vehicle.Wheels,
                 CheckIn = vehicle.CheckIn,
                 CheckOut = DateTime.Now
-                
+
             };
             return View(parkedVehicle);
         }
@@ -232,6 +242,66 @@ namespace Garage_2._0.Controllers
             _context.Vehicle.Remove(vehicle);
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        // GET: Vehicles/Checkout/5
+        public async Task<IActionResult> Checkout(int? id)
+        {
+            if (id == null)
+            {
+                return NotFound();
+            }
+
+            var vehicle = await _context.Vehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+            var parkedVehicle = new ParkingDetailModel
+            {
+                Id = vehicle.Id,
+                VehicleType = vehicle.VehicleType,
+                RegNo = vehicle.RegNo,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                Wheels = vehicle.Wheels,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = DateTime.Now
+
+            };
+            return View(parkedVehicle);
+        }
+
+        // POST: Vehicles/Checkout/5
+        // To protect from overposting attacks, enable the specific properties you want to bind to.
+        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+        [HttpPost, ActionName("Checkout")]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> Checkout(int id)
+        {
+            try
+            {
+                var vehicleCheckout = await _context.Vehicle.FindAsync(id);
+                if (vehicleCheckout == null)
+                    return NotFound();
+                vehicleCheckout.CheckOut = DateTime.Now;
+                _context.Update(vehicleCheckout);
+                await _context.SaveChangesAsync();
+                return RedirectToAction(nameof(Overview));
+            }
+            catch (DbUpdateConcurrencyException)
+            {
+                if (!VehicleExists(id))
+                {
+                    return NotFound();
+                }
+                else
+                {
+                    throw;
+                }
+            }
+
         }
 
         private bool VehicleExists(int id)

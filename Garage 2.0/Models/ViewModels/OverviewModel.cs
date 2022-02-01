@@ -32,8 +32,11 @@ namespace Garage_2._0.Models.ViewModels
         {
             get
             {
-                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, DateTime.Now, 10.0));
+                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, DateTime.Now, HourlyCost));
             }
         }
+
+        
+        public double HourlyCost { get; set; }
     }
 }
