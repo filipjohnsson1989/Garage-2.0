@@ -47,8 +47,8 @@ namespace Garage_2._0.Controllers
                     VehicleType = v.VehicleType,
                     Wheels = v.Wheels,
                 }).ToListAsync();
-
-            //return View(await _context.Vehicle.ToListAsync());
+           
+            
             return View(nameof(Index), res);
         }
 
@@ -66,8 +66,29 @@ namespace Garage_2._0.Controllers
                     HourlyCost = _parkingHourlyCost
                 }).ToListAsync();
 
-            //return View(nameof(ParkingOverView), res);
+            
             return View("ParkingOverView", res);
+        }
+
+        public async Task<IActionResult> Search(string regNo, int vehicleType)
+        {
+            var query = string.IsNullOrWhiteSpace(regNo) ?
+                            _context.Vehicle :
+                            _context.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+
+            query = vehicleType == null ?
+                             query :
+                             query.Where(v => (int)v.VehicleType == vehicleType);
+
+            var viewModel = query.Select(v => new ParkingDetailModel
+            {
+                Id = v.Id,
+                VehicleType = v.VehicleType,
+                RegNo = v.RegNo,
+                CheckIn = v.CheckIn,
+            });
+            return View(nameof(Index), await viewModel.ToListAsync());
+
         }
 
         // GET: Vehicles/Details/5
@@ -111,7 +132,7 @@ namespace Garage_2._0.Controllers
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType/*,CheckIn,CheckOut*/")] ParkingDetailModel vehicle)
-        {//VehicleType
+        {
             if (ModelState.IsValid)
             {
                 //vehicle.CheckIn = DateTime.Now;
