@@ -62,23 +62,6 @@ namespace Garage_2._0.Controllers
             return View("ParkingOverView", res);
         }
 
-        public async Task<IActionResult> Ticket()
-        {
-            var res = await _context.Vehicle
-                .Where(predicate => predicate.CheckOut == null)
-                .Select(t => new TicketViewModel
-                {
-                    Id = t.Id,
-                    VehicleType = t.VehicleType,
-                    CheckIn = t.CheckIn,
-                    CheckOut = (DateTime)t.CheckOut,
-                    RegNo = t.RegNo
-
-                }).ToListAsync();
-
-            return View("Ticket", res);
-        }
-
         // GET: Vehicles/Details/5
         public async Task<IActionResult> Details(int? id)
         {
@@ -240,11 +223,9 @@ namespace Garage_2._0.Controllers
             return View(parkedVehicle);
         }
 
+
         public async Task<IActionResult> Ticket(int? id) {
-            if(id == null)
-            {
-                return NotFound();
-            }
+            
 
             var vehicle = await _context.Vehicle
                 .FirstOrDefaultAsync(m => m.Id == id);
@@ -253,19 +234,18 @@ namespace Garage_2._0.Controllers
                 return NotFound();
             }
 
-            var ticket = new TicketViewModel
+            var ticketVehicle = new TicketViewModel
             {
                 Id = vehicle.Id,
                 VehicleType = vehicle.VehicleType,
                 RegNo = vehicle.RegNo,
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
-                Wheels = vehicle.Wheels,
                 CheckIn = vehicle.CheckIn,
                 CheckOut = DateTime.Now
 
             };
-            return View(ticket);
+            return View(ticketVehicle);
         }
 
         
