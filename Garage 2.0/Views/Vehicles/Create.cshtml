@@ -2,12 +2,12 @@
 @model Garage_2._0.Models.ViewModels.ParkingDetailModel
 
 @{
-    ViewData["Title"] = "Create";
+    ViewData["Title"] = "Parkera";
 }
 
-<h1>Create</h1>
+<h1>Parkera </h1>
 
-<h4>Vehicle</h4>
+<h4>Fordon</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -34,12 +34,10 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
-                 <label asp-for="VehicleType" class="control-label"></label>
-                <div class="input-group-append">
-                    <select class="form-control" asp-for="VehicleType" asp-items="Html.GetEnumSelectList<VehicleTypes>()">
-                        <option selected="selected" value="">Please select</option>
-                    </select>
-                </div>
+                <label asp-for="VehicleType" class="control-label"></label>
+                <select class="form-control" asp-for="VehicleType" asp-items="Html.GetEnumSelectList<VehicleTypes>()">
+                    <option selected="selected" value="">Välj typ</option>
+                </select>
                 <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
 
@@ -66,7 +64,7 @@
 </div>
 
 <div>
-    <a asp-action="Index">Back to List</a>
+    <a asp-action="Index">Tillbaka till listan</a>
 </div>
 
 @section Scripts {
