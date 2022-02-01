@@ -92,7 +92,6 @@ namespace Garage_2._0.Controllers
                 CheckOut = v.CheckOut
             });
             return View(nameof(Index), await viewModel.ToListAsync());
-
         }
 
         // GET: Vehicles/Details/5
@@ -256,6 +255,33 @@ namespace Garage_2._0.Controllers
             };
             return View(parkedVehicle);
         }
+
+
+        public async Task<IActionResult> Ticket(int? id) {
+            
+
+            var vehicle = await _context.Vehicle
+                .FirstOrDefaultAsync(m => m.Id == id);
+            if (vehicle == null)
+            {
+                return NotFound();
+            }
+
+            var ticketVehicle = new TicketViewModel
+            {
+                Id = vehicle.Id,
+                VehicleType = vehicle.VehicleType,
+                RegNo = vehicle.RegNo,
+                Brand = vehicle.Brand,
+                Model = vehicle.Model,
+                CheckIn = vehicle.CheckIn,
+                CheckOut = DateTime.Now
+
+            };
+            return View(ticketVehicle);
+        }
+
+        
 
         // POST: Vehicles/Delete/5
         [HttpPost, ActionName("Delete")]

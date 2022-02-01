@@ -11,19 +11,8 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<form asp-action="Search">
-    <div class="input-group mb-3">
-        <input type="text" class="form-control" name="regNo" placeholder="Search on reg No" />
-        <div class="input-group-append">
-            <select class="form-control" name="vehicleType" asp-items="@Html.GetEnumSelectList<VehicleTypes>()">
-                <option selected="selected" value="">Please select</option>
-            </select>
-        </div>
-        <div class="input-group-append">
-            <button type="submit" class="btn btn-primary"><i class="fa fa-search">&emsp;Search</i></button>
-        </div>
-    </div>
-</form>
+
+<partial name="_SearchFunction" />
 
 
 <table class="table">
@@ -32,7 +21,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
-                        <th>
+             <th>
                 @Html.DisplayNameFor(model => model.Wheels)
                 </th>
                 <th>
@@ -47,7 +36,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CheckIn)
             </th>
-                        <th>
+            <th>
                 @Html.DisplayNameFor(model => model.CheckOut)
                 </th>
 
