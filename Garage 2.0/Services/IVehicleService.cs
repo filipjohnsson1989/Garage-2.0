@@ -14,5 +14,6 @@ public interface IVehicleService
     bool Exists(int id);
     Task<IEnumerable<Vehicle>> FilterAsync(string regNo, int? vehicleType);
     Task CheckoutAsync(Vehicle newVehicle);
+    Task<IEnumerable<Vehicle>> GetAllHistoryAsync();
     IEnumerable<StatisticsViewModel> GetStatistics();
 }

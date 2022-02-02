@@ -187,7 +187,7 @@ public class VehiclesController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         await _vehicleService.RemoveAsync(id);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(History));
     }
 
     // GET: Vehicles/Checkout/5
@@ -240,6 +240,10 @@ public class VehiclesController : Controller
             }
         }
 
+    }
+    public async Task<IActionResult> History()
+    {
+        return View(nameof(History), _mapper.Map<List<HistoryViewModel>>(await _vehicleService.GetAllHistoryAsync()));
     }
 
     private bool VehicleExists(int id)

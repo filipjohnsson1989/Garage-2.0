@@ -80,6 +80,15 @@ public class VehicleService : ServiceBase, IVehicleService
         return _context.Vehicle.Any(e => e.Id == id);
     }
 
+    public async Task<IEnumerable<Vehicle>> GetAllHistoryAsync()
+    {
+        var vehicleHistory = await _context.Vehicle.Where(p => p.CheckOut != null)
+            .OrderBy(o => o.VehicleType)
+            .ThenBy(o => o.RegNo)
+            .ToListAsync();
+        return vehicleHistory;
+    }
+
     public  IEnumerable<StatisticsViewModel> GetStatistics()
     {
         var result = _context.Vehicle
