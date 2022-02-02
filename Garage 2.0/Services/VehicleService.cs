@@ -87,6 +87,7 @@ public class VehicleService : ServiceBase, IVehicleService
         var vehicleHistory = await _context.Vehicle.Where(p => p.CheckOut != null)
             .OrderBy(o => o.VehicleType)
             .ThenBy(o => o.RegNo)
+            .ThenByDescending(o => o.CheckIn)
             .ToListAsync();
         return vehicleHistory;
     }
