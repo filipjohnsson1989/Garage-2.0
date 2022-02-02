@@ -5,6 +5,7 @@ using Garage_2._0.Models.Entities;
 using Garage_2._0.Services;
 using AutoMapper;
 using Garage_2._0.Models.ViewModels;
+using Garage_2._0.Common;
 
 namespace Garage_2._0.Controllers;
 
@@ -37,7 +38,7 @@ public class VehiclesController : Controller
 
     public IActionResult Statistics()
     {
-        return View(_mapper.Map<List<StatisticsViewModel>>( _vehicleService.GetStatistics()));
+        return View(_mapper.Map<List<StatisticsViewModel>>(_vehicleService.GetStatistics()));
     }
 
 
@@ -174,8 +175,6 @@ public class VehiclesController : Controller
             return NotFound();
         }
 
-
-        vehicle.CheckOut = DateTime.Now;
         var ticket = _mapper.Map<TicketViewModel>(vehicle);
         ticket.HourlyCost = _parkingHourlyCost;
         return View(ticket);
@@ -221,7 +220,7 @@ public class VehiclesController : Controller
             if (vehicleCheckout == null)
                 return NotFound();
 
-            await _vehicleService.CheckoutAsync(vehicleCheckout);
+           await _vehicleService.CheckoutAsync(vehicleCheckout, _parkingHourlyCost);
 
             var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
             response.HourlyCost = _parkingHourlyCost;

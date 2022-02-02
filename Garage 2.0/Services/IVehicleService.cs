@@ -13,7 +13,7 @@ public interface IVehicleService
     Task UpdateAsync(Vehicle newVehicle);
     bool Exists(int id);
     Task<IEnumerable<Vehicle>> FilterAsync(string regNo, int? vehicleType);
-    Task CheckoutAsync(Vehicle newVehicle);
+    Task CheckoutAsync(Vehicle newVehicle, double parkingHourlyCost);
     Task<IEnumerable<Vehicle>> GetAllHistoryAsync();
     IEnumerable<StatisticsViewModel> GetStatistics();
 }

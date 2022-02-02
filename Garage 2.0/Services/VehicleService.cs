@@ -68,9 +68,11 @@ public class VehicleService : ServiceBase, IVehicleService
         await _context.SaveChangesAsync();
     }
 
-    public async Task CheckoutAsync(Vehicle vehicleCheckout)
+    public async Task CheckoutAsync(Vehicle vehicleCheckout, double parkingHourlyCost)
     {
         vehicleCheckout.CheckOut = DateTime.Now;
+        vehicleCheckout.ParkingCost = Util.ParkingTimeCost(vehicleCheckout.CheckIn, (DateTime)vehicleCheckout.CheckOut, parkingHourlyCost);
+        
         _context.Update(vehicleCheckout);
         await _context.SaveChangesAsync();
     }
