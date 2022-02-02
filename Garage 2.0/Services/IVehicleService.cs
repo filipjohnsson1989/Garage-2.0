@@ -5,11 +5,13 @@ namespace Garage_2._0.Services;
 
 public interface IVehicleService
 {
-    Task<VehicleIndexViewModel> AddAsync(Vehicle newVehicle);
+    Task<Vehicle> AddAsync(Vehicle newVehicle);
     Task CommitAsync();
-    Task<VehicleIndexViewModel?> GetAsync(int id);
-    Task<IEnumerable<VehicleIndexViewModel>> GetAllAsync();
+    Task<Vehicle?> GetAsync(int id);
+    Task<IEnumerable<Vehicle>> GetAllAsync();
     Task RemoveAsync(int id);
     Task UpdateAsync(Vehicle newVehicle);
     bool Exists(int id);
+    Task<IEnumerable<Vehicle>> FilterAsync(string regNo, int? vehicleType);
+    Task CheckoutAsync(Vehicle newVehicle);
 }

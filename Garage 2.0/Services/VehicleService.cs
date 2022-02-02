@@ -1,44 +1,67 @@
-﻿using AutoMapper;
-using Garage_2._0.Data;
+﻿using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
-using Garage_2._0.Models.ViewModels;
+
 using Microsoft.EntityFrameworkCore;
 
 namespace Garage_2._0.Services;
 
 public class VehicleService : ServiceBase, IVehicleService
 {
-    public VehicleService(IMapper _mapper, AppDbContext _context) : base(_mapper, _context)
+    private readonly IConfiguration _config;
+    private readonly double _parkingHourlyCost;
+    public VehicleService(Garage_2_0Context _context, IConfiguration config) : base(_context)
     {
+        _config = config;
+
+        if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
+            _parkingHourlyCost = 0.0;
+        else
+            _parkingHourlyCost = timeRate;
     }
 
-    public async Task<VehicleIndexViewModel> AddAsync(Vehicle newVehicle)
+    public async Task<Vehicle> AddAsync(Vehicle newVehicle)
     {
+        newVehicle.CheckIn = DateTime.Now;
         await _context.AddAsync(newVehicle);
         await _context.SaveChangesAsync();
-        return _mapper.Map<VehicleIndexViewModel>(newVehicle);
+        return newVehicle;
     }
-
 
     public async Task CommitAsync()
     {
         await _context.SaveChangesAsync();
     }
 
-    public async Task<VehicleIndexViewModel?> GetAsync(int id)
+    public async Task<IEnumerable<Vehicle>> GetAllAsync()
     {
-        var vehicle= await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
-        return _mapper.Map<VehicleIndexViewModel>(vehicle);
+        var vehicles = await _context.Vehicle.Where(p => p.CheckOut == null).ToListAsync();
+        return vehicles;
     }
 
-    public async Task<IEnumerable<VehicleIndexViewModel>> GetAllAsync()
+    public async Task<IEnumerable<Vehicle>> FilterAsync(string regNo, int? vehicleType)
     {
-        var vehicles = await _context.Vehicle.ToListAsync();
-        return _mapper.Map<List<VehicleIndexViewModel>>(vehicles);
+        var query = string.IsNullOrWhiteSpace(regNo) ?
+                            _context.Vehicle :
+                            _context.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
+
+        query = vehicleType == null ?
+                         query :
+                         query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
+
+        var vehicles = await query.Where(p => p.CheckOut == null).ToListAsync();
+        return vehicles;
     }
+
+    public async Task<Vehicle?> GetAsync(int id)
+    {
+        var vehicle= await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
+        return vehicle;
+    }
+
 
     public async Task UpdateAsync(Vehicle newVehicle)
     {
+        newVehicle.CheckIn = DateTime.Now;
         _context.Update(newVehicle);
         await _context.SaveChangesAsync();
     }
@@ -47,6 +70,13 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         var vehicle = await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
         _context.Vehicle.Remove(vehicle!);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task CheckoutAsync(Vehicle vehicleCheckout)
+    {
+        vehicleCheckout.CheckOut = DateTime.Now;
+        _context.Update(vehicleCheckout);
         await _context.SaveChangesAsync();
     }
 

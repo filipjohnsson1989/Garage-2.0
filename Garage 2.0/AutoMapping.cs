@@ -8,6 +8,10 @@ public class AutoMapping : Profile
 {
     public AutoMapping()
     {
-        CreateMap<Vehicle, VehicleIndexViewModel>(); // means you want to map from Vehicle to VehicleIndexViewModel
+        CreateMap<Vehicle, ParkingDetailModel>(); // means you want to map from Vehicle to ParkingDetailModel
+        CreateMap<Vehicle, OverviewModel>(); // means you want to map from Vehicle to OverviewModel
+        CreateMap<Vehicle, TicketViewModel>(); // means you want to map from Vehicle to OverviewModel
+
+
     }
 }

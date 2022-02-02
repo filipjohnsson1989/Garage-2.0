@@ -1,14 +1,14 @@
 ﻿@model Garage_2._0.Models.ViewModels.ParkingDetailModel
 
 @{
-    ViewData["Title"] = "Radera";
+    ViewData["Title"] = "Checka ut fordon";
 }
 
-<h1>Radera</h1>
+<h1>Checka ut fordon</h1>
 
-<h3>Är du säker på att du vill radera detta fordon?</h3>
+<h3>Är du säker på att du vill Checka ut detta fordon?</h3>
 <div>
-    <h4>Vehicle</h4>
+    <h4>Fordon</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -55,10 +55,9 @@
         </dd>
     </dl>
     
-    <form asp-action="Delete">
+    <form asp-action="Checkout">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Ticket" asp-route-id="@Model.Id">Get your Ticket here!</a>
+        <input type="submit" value="Checkout" class="btn btn-danger" /> |
         <a asp-action="Index">Back to List</a>
     </form>
 </div>

@@ -1,17 +1,13 @@
-﻿using AutoMapper;
-using Garage_2._0.Data;
+﻿using Garage_2._0.Data;
 
-namespace Garage_2._0.Services
+namespace Garage_2._0.Services;
+
+public class ServiceBase
 {
-    public class ServiceBase
-    {
-        protected readonly IMapper _mapper;
-        protected readonly AppDbContext _context;
+    protected readonly Garage_2_0Context _context;
 
-        public ServiceBase(IMapper mapper, AppDbContext context)
-        {
-            this._mapper = mapper;
-            this._context = context;
-        }
+    public ServiceBase(Garage_2_0Context context)
+    {
+        this._context = context;
     }
 }

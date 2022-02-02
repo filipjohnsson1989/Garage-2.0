@@ -1,4 +1,4 @@
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
 using Garage_2._0.Services;
 
@@ -7,8 +7,8 @@ var builder = WebApplication.CreateBuilder(args);
 builder.Services.AddScoped<IVehicleService, VehicleService>();
 
 
-builder.Services.AddDbContext<AppDbContext>(options =>
-    options.UseSqlServer(builder.Configuration.GetConnectionString("AppDbContext")));
+builder.Services.AddDbContext<Garage_2_0Context>(options =>
+    options.UseSqlServer(builder.Configuration.GetConnectionString("Garage_2_0Context")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
