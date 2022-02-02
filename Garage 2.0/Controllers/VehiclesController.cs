@@ -25,11 +25,11 @@ public class VehiclesController : Controller
 
         _config = config;
 
-            if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
-                _parkingHourlyCost = timeRate;
-            else
-                _parkingHourlyCost = 0.0;
-        }
+        if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
+            _parkingHourlyCost = timeRate;
+        else
+            _parkingHourlyCost = 0.0;
+    }
 
     // GET: Vehicles
     public async Task<IActionResult> Index()
@@ -86,7 +86,8 @@ public class VehiclesController : Controller
         if (ModelState.IsValid)
         {
             await _vehicleService.AddAsync(vehicle);
-            return RedirectToAction(nameof(Index));
+            return View("CheckInResponse", _mapper.Map<ParkingDetailModel>(vehicle));
+            //return RedirectToAction(nameof(Index));
         }
         return View(_mapper.Map<ParkingDetailModel>(vehicle));
     }
@@ -171,8 +172,9 @@ public class VehiclesController : Controller
 
 
         vehicle.CheckOut = DateTime.Now;
-
-        return View(_mapper.Map<TicketViewModel>(vehicle));
+        var ticket = _mapper.Map<TicketViewModel>(vehicle);
+        ticket.HourlyCost = _parkingHourlyCost;
+        return View(ticket);
     }
 
     // POST: Vehicles/Delete/5
@@ -216,7 +218,11 @@ public class VehiclesController : Controller
                 return NotFound();
 
             await _vehicleService.CheckoutAsync(vehicleCheckout);
-            return RedirectToAction(nameof(Overview));
+
+            var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
+            response.HourlyCost = _parkingHourlyCost;
+
+            return View("CheckoutResponse", response);
         }
         catch (DbUpdateConcurrencyException)
         {
