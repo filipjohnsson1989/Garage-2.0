@@ -7,16 +7,9 @@ namespace Garage_2._0.Services;
 
 public class VehicleService : ServiceBase, IVehicleService
 {
-    private readonly IConfiguration _config;
-    private readonly double _parkingHourlyCost;
-    public VehicleService(Garage_2_0Context _context, IConfiguration config) : base(_context)
+    public VehicleService(Garage_2_0Context _context) : base(_context)
     {
-        _config = config;
-
-        if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
-            _parkingHourlyCost = 0.0;
-        else
-            _parkingHourlyCost = timeRate;
+        
     }
 
     public async Task<Vehicle> AddAsync(Vehicle newVehicle)

@@ -14,10 +14,21 @@ public class VehiclesController : Controller
     private readonly IVehicleService _vehicleService;
 
 
-    public VehiclesController(IMapper mapper, IVehicleService vehicleService)
+    private readonly IConfiguration _config;
+    private readonly double _parkingHourlyCost;
+
+
+    public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config)
     {
         _mapper = mapper;
         _vehicleService = vehicleService;
+
+        _config = config;
+
+        if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
+            _parkingHourlyCost = 0.0;
+        else
+            _parkingHourlyCost = timeRate;
     }
 
     // GET: Vehicles
@@ -28,7 +39,13 @@ public class VehiclesController : Controller
 
     public async Task<IActionResult> Overview()
     {
-        return View("ParkingOverView", _mapper.Map<List<OverviewModel>>(await _vehicleService.GetAllAsync()));
+        var vehicles = _mapper.Map<List<OverviewModel>>(await _vehicleService.GetAllAsync());
+        foreach (var vehicle in vehicles)
+        {
+            vehicle.HourlyCost = _parkingHourlyCost;
+
+        }
+        return View("ParkingOverView", vehicles);
     }
 
     public async Task<IActionResult> Search(string regNo, int? vehicleType)
