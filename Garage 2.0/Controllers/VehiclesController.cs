@@ -24,10 +24,10 @@ namespace Garage_2._0.Controllers
             _context = context;
             _config = config;
 
-            if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
-                _parkingHourlyCost = 0.0;
-            else
+            if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
                 _parkingHourlyCost = timeRate;
+            else
+                _parkingHourlyCost = 0.0;
         }
 
         // GET: Vehicles
@@ -138,7 +138,6 @@ namespace Garage_2._0.Controllers
         {
             if (ModelState.IsValid)
             {
-
                 var vehicleEntiy = new Vehicle
                 {
                     RegNo = vehicle.RegNo,
@@ -150,7 +149,10 @@ namespace Garage_2._0.Controllers
                 };
                 _context.Add(vehicleEntiy);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
+
+                vehicle.CheckIn = vehicleEntiy.CheckIn;
+               // return RedirectToAction(nameof(Index));
+                return View("CheckInResponse", vehicle);
             }
             return View(vehicle);
         }
@@ -275,8 +277,8 @@ namespace Garage_2._0.Controllers
                 Brand = vehicle.Brand,
                 Model = vehicle.Model,
                 CheckIn = vehicle.CheckIn,
-                CheckOut = DateTime.Now
-
+                CheckOut = DateTime.Now,
+                HourlyCost = _parkingHourlyCost
             };
             return View(ticketVehicle);
         }
@@ -338,7 +340,16 @@ namespace Garage_2._0.Controllers
                 vehicleCheckout.CheckOut = DateTime.Now;
                 _context.Update(vehicleCheckout);
                 await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Overview));
+                //return RedirectToAction(nameof(Overview));
+                //return RedirectToAction("CheckoutResponse");
+                return View("CheckoutResponse", new ResponseViewModel
+                {
+                    Id = vehicleCheckout.Id,
+                    RegNo = vehicleCheckout.RegNo,
+                    CheckIn = vehicleCheckout.CheckIn,
+                    CheckOut = (DateTime)vehicleCheckout.CheckOut,
+                    HourlyCost = _parkingHourlyCost
+                });
             }
             catch (DbUpdateConcurrencyException)
             {

@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Garage_2._0.Models.ViewModels
 {
-    public class TicketViewModel
+    public class ResponseViewModel
     {
         [Display(Name = "Reg nr")]
         [Required]
@@ -11,23 +11,23 @@ namespace Garage_2._0.Models.ViewModels
 
         public int Id { get; set; }
 
-        [Display(Name = "Antal hjul")]
-        [Range(0, 14)]
-        public int Wheels { get; set; }
+        //[Display(Name = "Antal hjul")]
+        //[Range(0, 14)]
+        //public int Wheels { get; set; }
 
-        [Display(Name = "Märke")]
-        public string Brand { get; set; }
+        //[Display(Name = "Märke")]
+        //public string Brand { get; set; }
 
-        [Display(Name = "Modell")]
-        public string Model { get; set; }
+        //[Display(Name = "Modell")]
+        //public string Model { get; set; }
 
-        [Display(Name = "Fordonstyp")]
-        public VehicleTypes VehicleType { get; set; }
+        //[Display(Name = "Fordonstyp")]
+        //public VehicleTypes VehicleType { get; set; }
 
-        [Display(Name = "Check in tid")]
+        [Display(Name = "Ankomsttid")]
         public DateTime CheckIn { get; set; }
 
-        [Display(Name = "Check out tid")]
+        [Display(Name = "Utcheckningstid")]
         public DateTime CheckOut { get; set; }
 
         [Display(Name = "Parkerad tid")]
@@ -35,7 +35,7 @@ namespace Garage_2._0.Models.ViewModels
         { 
             get
             {
-                return Util.ParkingTimeString(CheckIn, DateTime.Now);
+                return Util.ParkingTimeString(CheckIn, CheckOut);
             } 
         }
 
@@ -44,11 +44,11 @@ namespace Garage_2._0.Models.ViewModels
         {
             get
             {
-                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, DateTime.Now, HourlyCost));
+                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, CheckOut, HourlyCost));
             }
         }
 
-        [Display(Name = "Timkostnad")]
+        [Display(Name ="Timkostnad")]
         public double HourlyCost { get; internal set; }
     }
 }

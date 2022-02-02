@@ -47,17 +47,18 @@
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CheckIn)
         </dd>
-        <dt class = "col-sm-2">
+@*        <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.CheckOut)
         </dt>
         <dd class = "col-sm-10">
             @Html.DisplayFor(model => model.CheckOut)
-        </dd>
+        </dd>*@
     </dl>
     
     <form asp-action="Checkout">
         <input type="hidden" asp-for="Id" />
-        <input type="submit" value="Checkout" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Checka ut" class="btn btn-primary btn-sm" /> 
+        @*<a class="btn btn-primary btn-sm" asp-action="Ticket" asp-route-id="@Model?.Id">Kvittto!</a>*@
+        <a class="btn btn-primary btn-sm" asp-action="Overview">Tillbaka till listan</a>
     </form>
 </div>

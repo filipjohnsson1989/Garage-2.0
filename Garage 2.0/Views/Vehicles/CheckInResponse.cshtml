@@ -1,0 +1,22 @@
+﻿@model Garage_2._0.Models.ViewModels.ParkingDetailModel
+
+@{
+    ViewData["Title"] = "Parkerad";
+}
+
+<h1>@Html.DisplayFor(model => model.RegNo) är nu incheckad</h1>
+
+<p>Ankomsttid:   @Html.DisplayFor(model => model.CheckIn)</p>
+<br />
+<h4>Ha en bra dag</h4>
+<br />
+<div>
+ 
+    @*    <form asp-action="Checkout">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Checkout" class="btn btn-primary btn-sm" /> |
+        </form>*@
+
+    <a class="btn btn-primary btn-sm" asp-action="Overview">Tillbaka till listan</a>
+    <a class="btn btn-primary btn-sm" asp-action="Create">Checka in nytt fordon</a>
+</div>

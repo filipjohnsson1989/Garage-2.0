@@ -1,0 +1,92 @@
+﻿@model Garage_2._0.Models.ViewModels.ResponseViewModel
+
+@{
+    ViewData["Title"] = "Utcheckad";
+}
+
+<h1>Du är nu utcheckad</h1>
+@*<p>Du checkade ut:  @Html.DisplayFor(model => model.CheckOut)</p>
+<p>Kostnaden blev:  @Html.DisplayFor(model => model.Price)</p>
+<p>Tim kostnad:  @Html.DisplayFor(model => model.HourlyCost)</p>
+<br />
+<br />
+<h3>Välkommen tillbaka</h3>
+<br />*@
+<br />
+<div>
+    <h4>Fordon</h4>
+    <hr />
+    <dl class="row">
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.RegNo)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.RegNo)
+        </dd>
+        @*
+            <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Wheels)
+            </dt>
+            <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Wheels)
+            </dd>
+            <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Brand)
+            </dt>
+            <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Brand)
+            </dd>
+            <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Model)
+            </dt>
+            <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Model)
+            </dd>
+            <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.VehicleType)
+            </dt>
+            <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.VehicleType)
+            </dd>
+        *@
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CheckIn)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CheckIn)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.CheckOut)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.CheckOut)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.HourlyCost)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.HourlyCost)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.ParkingTime)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.ParkingTime)
+        </dd>
+        <dt class="col-sm-2">
+            @Html.DisplayNameFor(model => model.Price)
+        </dt>
+        <dd class="col-sm-10">
+            @Html.DisplayFor(model => model.Price)
+        </dd>
+
+    </dl>
+
+    <h4>Välkommen tillbaka</h4>
+    @*    <form asp-action="Checkout">
+        <input type="hidden" asp-for="Id" />
+        <input type="submit" value="Checkout" class="btn btn-primary btn-sm" /> |
+        </form>*@
+    <a class="btn btn-primary btn-sm" asp-action="Ticket" asp-route-id="@Model?.Id">Kvittto!</a>
+    <a class="btn btn-primary btn-sm" asp-action="Overview">Tillbaka till listan</a>
+</div>
