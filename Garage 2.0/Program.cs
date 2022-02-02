@@ -1,13 +1,19 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using Microsoft.Extensions.DependencyInjection;
 using Garage_2._0.Data;
+using Garage_2._0.Services;
+
 var builder = WebApplication.CreateBuilder(args);
+
+builder.Services.AddScoped<IVehicleService, VehicleService>();
+
 
 builder.Services.AddDbContext<Garage_2_0Context>(options =>
     options.UseSqlServer(builder.Configuration.GetConnectionString("Garage_2_0Context")));
 
 // Add services to the container.
 builder.Services.AddControllersWithViews();
+
+builder.Services.AddAutoMapper(AppDomain.CurrentDomain.GetAssemblies());
 
 var app = builder.Build();
 
