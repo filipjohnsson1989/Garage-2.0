@@ -237,6 +237,10 @@ public class VehiclesController : Controller
         }
 
     }
+    public async Task<IActionResult> History()
+    {
+        return View(nameof(History), _mapper.Map<List<HistoryViewModel>>(await _vehicleService.GetAllHistoryAsync()));
+    }
 
     private bool VehicleExists(int id)
     {

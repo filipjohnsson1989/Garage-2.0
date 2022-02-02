@@ -13,5 +13,6 @@ public class AutoMapping : Profile
         CreateMap<Vehicle, TicketViewModel>(); // means you want to map from Vehicle to OverviewModel
 
         CreateMap<Vehicle, ResponseViewModel>();
+        CreateMap<Vehicle, HistoryViewModel>();
     }
 }

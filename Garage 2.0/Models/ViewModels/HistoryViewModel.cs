@@ -3,7 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace Garage_2._0.Models.ViewModels
 {
-    public class ParkingDetailModel
+    public class HistoryViewModel
     {
         [Required]
         [Display(Name = "Reg num")]
