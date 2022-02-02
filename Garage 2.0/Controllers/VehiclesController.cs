@@ -9,6 +9,7 @@ using Microsoft.EntityFrameworkCore;
 using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
 using Garage_2._0.Models.ViewModels;
+using Garage_2._0.Common;
 
 
 namespace Garage_2._0.Controllers
@@ -16,11 +17,13 @@ namespace Garage_2._0.Controllers
     public class VehiclesController : Controller
     {
         private readonly Garage_2_0Context _context;
-
         public VehiclesController(Garage_2_0Context context)
         {
             _context = context;
+
         }
+
+        public GarageSize garageSize;
 
         // GET: Vehicles
         public async Task<IActionResult> Index()
@@ -117,8 +120,13 @@ namespace Garage_2._0.Controllers
                     VehicleType = vehicle.VehicleType,
                     CheckIn = DateTime.Now
                 };
-                _context.Add(vehicleEntiy);
-                await _context.SaveChangesAsync();
+
+                if (garageSize.Size != garageSize.MaxCapacity)
+                {
+                    _context.Add(vehicleEntiy);
+                    await _context.SaveChangesAsync();
+                    garageSize.Size += 1;
+                }
                 return RedirectToAction(nameof(Index));
             }
             return View(vehicle);

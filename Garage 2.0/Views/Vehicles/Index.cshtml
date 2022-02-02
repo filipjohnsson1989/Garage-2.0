@@ -1,7 +1,9 @@
 ﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
+@using Garage_2._0.Common;
 
 @{
     ViewData["Title"] = "Index";
+    var garageSize = ViewData["GarageSize"] as GarageSize;
 }
 
 <h1>Index</h1>
@@ -9,6 +11,10 @@
 <p>
     <a asp-action="Create">Create New</a>
 </p>
+
+<th>
+    @Html.DisplayFor(garageSize => garageSize)
+</th>
 <table class="table">
     <thead>
         <tr>
