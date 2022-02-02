@@ -88,11 +88,16 @@ public class VehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
+        if (VehicleRegNoExists(vehicle.RegNo))
+        {
+            ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
+            return View(_mapper.Map<ParkingDetailModel>(vehicle));
+        }
+
         if (ModelState.IsValid)
         {
             await _vehicleService.AddAsync(vehicle);
-            return View("CheckInResponse", _mapper.Map<ParkingDetailModel>(vehicle));
-            //return RedirectToAction(nameof(Index));
+            return View("CheckInResponse", _mapper.Map<ParkingDetailModel>(vehicle));          
         }
         return View(_mapper.Map<ParkingDetailModel>(vehicle));
     }
@@ -123,6 +128,14 @@ public class VehiclesController : Controller
         if (id != vehicle.Id)
         {
             return NotFound();
+        }
+        //var test = _vehicleService.IsRegNoChanged(id, vehicle.RegNo);
+        //var test2 = VehicleRegNoExists(vehicle.RegNo);
+
+        if (_vehicleService.IsRegNoChanged(id, vehicle.RegNo) && VehicleRegNoExists(vehicle.RegNo))
+        {
+            ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
+            return View(_mapper.Map<ParkingDetailModel>(vehicle));
         }
 
         if (ModelState.IsValid)
@@ -248,5 +261,10 @@ public class VehiclesController : Controller
     private bool VehicleExists(int id)
     {
         return _vehicleService.Exists(id);
+    }
+
+    private bool VehicleRegNoExists(string regNo)
+    {
+        return _vehicleService.RegNoExists(regNo);
     }
 }

@@ -17,6 +17,7 @@ public class VehicleService : ServiceBase, IVehicleService
     public async Task<Vehicle> AddAsync(Vehicle newVehicle)
     {
         newVehicle.CheckIn = DateTime.Now;
+        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
         await _context.AddAsync(newVehicle);
         await _context.SaveChangesAsync();
         return newVehicle;
@@ -56,7 +57,8 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task UpdateAsync(Vehicle newVehicle)
     {
-        newVehicle.CheckIn = DateTime.Now;
+        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
+        //newVehicle.CheckIn = DateTime.Now;
         _context.Update(newVehicle);
         await _context.SaveChangesAsync();
     }
@@ -80,6 +82,10 @@ public class VehicleService : ServiceBase, IVehicleService
     public bool Exists(int id)
     {
         return _context.Vehicle.Any(e => e.Id == id);
+    }
+    public bool RegNoExists(string regNo)
+    {
+        return _context.Vehicle.Any(e => e.CheckOut == null && e.RegNo == regNo );
     }
 
     public async Task<IEnumerable<Vehicle>> GetAllHistoryAsync()
@@ -119,4 +125,8 @@ public class VehicleService : ServiceBase, IVehicleService
 
     }
 
+    public bool IsRegNoChanged(int id, string regNo)
+    {
+        return _context.Vehicle.Any(e => e.CheckOut == null && e.Id == id && e.RegNo != regNo);
+    }
 }

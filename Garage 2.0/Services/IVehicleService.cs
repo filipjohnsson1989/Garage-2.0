@@ -16,4 +16,6 @@ public interface IVehicleService
     Task CheckoutAsync(Vehicle newVehicle, double parkingHourlyCost);
     Task<IEnumerable<Vehicle>> GetAllHistoryAsync();
     IEnumerable<StatisticsViewModel> GetStatistics();
+    bool RegNoExists(string regNo);
+    bool IsRegNoChanged(int id, string regNo);
 }
