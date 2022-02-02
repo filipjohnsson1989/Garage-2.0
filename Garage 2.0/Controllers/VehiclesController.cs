@@ -183,7 +183,7 @@ public class VehiclesController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         await _vehicleService.RemoveAsync(id);
-        return RedirectToAction(nameof(Index));
+        return RedirectToAction(nameof(History));
     }
 
     // GET: Vehicles/Checkout/5
