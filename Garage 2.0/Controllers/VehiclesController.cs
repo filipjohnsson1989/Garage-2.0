@@ -13,10 +13,8 @@ public class VehiclesController : Controller
     protected readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
 
-
     private readonly IConfiguration _config;
     private readonly double _parkingHourlyCost;
-
 
     public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config)
     {
@@ -36,6 +34,12 @@ public class VehiclesController : Controller
     {
         return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync()));
     }
+
+    public IActionResult Statistics()
+    {
+        return View(_mapper.Map<List<StatisticsViewModel>>( _vehicleService.GetStatistics()));
+    }
+
 
     public async Task<IActionResult> Overview()
     {

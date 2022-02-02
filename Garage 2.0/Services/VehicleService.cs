@@ -1,7 +1,9 @@
-﻿using Garage_2._0.Data;
+﻿using Garage_2._0.Common;
+using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
-
+using Garage_2._0.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Garage_2._0.Services;
 
@@ -9,7 +11,7 @@ public class VehicleService : ServiceBase, IVehicleService
 {
     public VehicleService(Garage_2_0Context _context) : base(_context)
     {
-        
+
     }
 
     public async Task<Vehicle> AddAsync(Vehicle newVehicle)
@@ -47,7 +49,7 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task<Vehicle?> GetAsync(int id)
     {
-        var vehicle= await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
+        var vehicle = await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
         return vehicle;
     }
 
@@ -78,5 +80,30 @@ public class VehicleService : ServiceBase, IVehicleService
         return _context.Vehicle.Any(e => e.Id == id);
     }
 
+    public  IEnumerable<StatisticsViewModel> GetStatistics()
+    {
+        var result = _context.Vehicle
+        .GroupBy(v => v.VehicleType)
+        .Select(cv => new
+        {
+            VehicleType = cv.Key,
+            NumOfVehicles = cv.Count(),
+            TotalTime = (decimal)cv.Sum(c => EF.Functions.DateDiffMinute(c.CheckIn, c.CheckOut.HasValue ? c.CheckOut.Value : DateTime.Now)),
+            NumOfWheels = cv.Sum(c => c.Wheels),
+        });
+
+
+        var vehicles = result.ToList().Select(v => new StatisticsViewModel()
+        {
+            VehicleType = v.VehicleType,
+            NumOfVehicles = v.NumOfVehicles,
+            TotalTime = (int)v.TotalTime,
+            Payment = String.Format(" {0:C2}", Math.Round(v.TotalTime * 10 / 60, 2)),
+            NumOfWheels = v.NumOfWheels,
+        });
+
+        return vehicles;
+
+    }
 
 }
