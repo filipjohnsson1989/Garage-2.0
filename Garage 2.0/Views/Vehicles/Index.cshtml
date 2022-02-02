@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
+﻿@using Garage_2._0.Common
+@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
 @using Garage_2._0.Common;
 
 @{
@@ -12,16 +13,17 @@
     <a asp-action="Create">Create New</a>
 </p>
 
-<th>
-    @Html.DisplayFor(garageSize => garageSize)
-</th>
+
+<partial name="_SearchFunction" />
+
+
 <table class="table">
     <thead>
         <tr>
             <th>
                 @Html.DisplayNameFor(model => model.RegNo)
             </th>
-                        <th>
+             <th>
                 @Html.DisplayNameFor(model => model.Wheels)
                 </th>
                 <th>
@@ -36,7 +38,7 @@
             <th>
                 @Html.DisplayNameFor(model => model.CheckIn)
             </th>
-                        <th>
+            <th>
                 @Html.DisplayNameFor(model => model.CheckOut)
                 </th>
 
