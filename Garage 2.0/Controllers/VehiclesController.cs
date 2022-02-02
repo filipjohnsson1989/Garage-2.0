@@ -5,7 +5,6 @@ using Garage_2._0.Models.Entities;
 using Garage_2._0.Services;
 using AutoMapper;
 using Garage_2._0.Models.ViewModels;
-using Garage_2._0.Common;
 
 namespace Garage_2._0.Controllers;
 
@@ -32,27 +31,11 @@ public class VehiclesController : Controller
             _parkingHourlyCost = timeRate;
     }
 
-        // GET: Vehicles
-        public async Task<IActionResult> Index()
-        {
-
-            var res = await _context.Vehicle
-                .Where(p => p.CheckOut == null)
-                .Select(v => new ParkingDetailModel
-                {
-                    Id = v.Id,
-                    Brand = v.Brand,
-                    CheckIn = v.CheckIn,
-                    CheckOut = v.CheckOut,
-                    Model = v.Model,
-                    RegNo = v.RegNo,
-                    VehicleType = v.VehicleType,
-                    Wheels = v.Wheels,
-                }).ToListAsync();
-
-            //return View(await _context.Vehicle.ToListAsync());
-            return View(nameof(Index), res);
-        }
+    // GET: Vehicles
+    public async Task<IActionResult> Index()
+    {
+        return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync()));
+    }
 
     public async Task<IActionResult> Overview()
     {
@@ -93,32 +76,20 @@ public class VehiclesController : Controller
         return View();
     }
 
-        // POST: Vehicles/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType/*,CheckIn,CheckOut*/")] ParkingDetailModel vehicle)
+    // POST: Vehicles/Create
+    // To protect from overposting attacks, enable the specific properties you want to bind to.
+    // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
+    [HttpPost]
+    [ValidateAntiForgeryToken]
+    public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
+    {
+        if (ModelState.IsValid)
         {
-            if (ModelState.IsValid)
-            {
-                //vehicle.CheckIn = DateTime.Now;
-                vehicle.VehicleType = Common.VehicleTypes.Car;
-
-                var vehicleEntiy = new Vehicle {
-                    RegNo = vehicle.RegNo,
-                    Brand = vehicle.Brand,
-                    Model = vehicle.Model,
-                    Wheels = vehicle.Wheels,
-                    VehicleType = vehicle.VehicleType,
-                    CheckIn = DateTime.Now
-                };
-                _context.Add(vehicleEntiy);
-                await _context.SaveChangesAsync();
-                return RedirectToAction(nameof(Index));
-            }
-            return View(vehicle);
+            await _vehicleService.AddAsync(vehicle);
+            return RedirectToAction(nameof(Index));
         }
+        return View(_mapper.Map<ParkingDetailModel>(vehicle));
+    }
 
     // GET: Vehicles/Edit/5
     public async Task<IActionResult> Edit(int? id)
