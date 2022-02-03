@@ -87,7 +87,7 @@ public class VehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
+    public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,Color")] Vehicle vehicle)
     {
         if (VehicleRegNoParked(vehicle.RegNo))
         {
@@ -124,7 +124,7 @@ public class VehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
+    public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,Color")] Vehicle vehicle)
     {
         if (id != vehicle.Id)
         {
