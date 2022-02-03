@@ -5,6 +5,7 @@ using Garage_2._0.Models.Entities;
 using Garage_2._0.Services;
 using AutoMapper;
 using Garage_2._0.Models.ViewModels;
+using Garage_2._0.Common;
 
 namespace Garage_2._0.Controllers;
 
@@ -12,7 +13,6 @@ public class VehiclesController : Controller
 {
     protected readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
-
 
     private readonly IConfiguration _config;
     private readonly double _parkingHourlyCost;
@@ -34,7 +34,14 @@ public class VehiclesController : Controller
     // GET: Vehicles
     public async Task<IActionResult> Index()
     {
-        return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync()));
+        var vehicles = _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync());
+        var result = new VehicleIndexViewModel()
+        {
+            Vehicles = vehicles,
+            GarageSize = _vehicleService.GarageSize,
+
+        };
+        return View(nameof(Index), result);
     }
 
     public async Task<IActionResult> Overview()
@@ -52,6 +59,7 @@ public class VehiclesController : Controller
     {
         return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.FilterAsync(regNo, vehicleType)));
     }
+
 
     // GET: Vehicles/Details/5
     public async Task<IActionResult> Details(int? id)
@@ -83,11 +91,13 @@ public class VehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
+        var isAvailable = _vehicleService.GarageSize;
         if (ModelState.IsValid)
-        {
-            await _vehicleService.AddAsync(vehicle);
-            return RedirectToAction(nameof(Index));
-        }
+            {
+                await _vehicleService.AddAsync(vehicle);
+                return RedirectToAction(nameof(Index));
+            }
+        
         return View(_mapper.Map<ParkingDetailModel>(vehicle));
     }
 
@@ -181,6 +191,8 @@ public class VehiclesController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         await _vehicleService.RemoveAsync(id);
+
+        _vehicleService.GarageSize.Size -= 1;
         return RedirectToAction(nameof(Index));
     }
 

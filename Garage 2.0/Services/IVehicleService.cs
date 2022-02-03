@@ -1,10 +1,13 @@
-﻿using Garage_2._0.Models.Entities;
+﻿using Garage_2._0.Common;
+using Garage_2._0.Models.Entities;
 using Garage_2._0.Models.ViewModels;
 
 namespace Garage_2._0.Services;
 
 public interface IVehicleService
 {
+    GarageSize GarageSize { get; set; }
+
     Task<Vehicle> AddAsync(Vehicle newVehicle);
     Task CommitAsync();
     Task<Vehicle?> GetAsync(int id);

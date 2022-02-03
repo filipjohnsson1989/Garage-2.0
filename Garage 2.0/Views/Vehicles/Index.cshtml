@@ -1,10 +1,8 @@
 ﻿@using Garage_2._0.Common
-@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
-@using Garage_2._0.Common;
+@model VehicleIndexViewModel
 
 @{
     ViewData["Title"] = "Index";
-    var garageSize = ViewData["GarageSize"] as GarageSize;
 }
 
 <h1>Index</h1>
@@ -15,38 +13,44 @@
 
 
 <partial name="_SearchFunction" />
+<p>
+    Platser kvar: @Model.GarageSize.Size
+</p>
 
+<p>
+    Av @Model.GarageSize.MaxCapacity möjliga platser.
+</p>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RegNo)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.RegNo)
             </th>
              <th>
-                @Html.DisplayNameFor(model => model.Wheels)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Wheels)
                 </th>
                 <th>
-                @Html.DisplayNameFor(model => model.Brand)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Brand)
                 </th>
                 <th>
-                @Html.DisplayNameFor(model => model.Model)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Model)
                 </th>
             <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.VehicleType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckIn)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckIn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.CheckOut)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckOut)
                 </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Vehicles)
         {
             <tr>
                 <td>

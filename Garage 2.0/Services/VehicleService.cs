@@ -1,4 +1,5 @@
-﻿using Garage_2._0.Data;
+﻿using Garage_2._0.Common;
+using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
 
 using Microsoft.EntityFrameworkCore;
@@ -7,9 +8,11 @@ namespace Garage_2._0.Services;
 
 public class VehicleService : ServiceBase, IVehicleService
 {
+    public GarageSize GarageSize { get; set; }
+
     public VehicleService(Garage_2_0Context _context) : base(_context)
     {
-        
+        GarageSize = new GarageSize();
     }
 
     public async Task<Vehicle> AddAsync(Vehicle newVehicle)
@@ -63,6 +66,7 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         var vehicle = await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
         _context.Vehicle.Remove(vehicle!);
+        GarageSize.Size -= 1;
         await _context.SaveChangesAsync();
     }
 
