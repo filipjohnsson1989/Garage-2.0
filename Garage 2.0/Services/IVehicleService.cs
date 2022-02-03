@@ -1,10 +1,13 @@
-﻿using Garage_2._0.Models.Entities;
+﻿using Garage_2._0.Common;
+using Garage_2._0.Models.Entities;
 using Garage_2._0.Models.ViewModels;
 
 namespace Garage_2._0.Services;
 
 public interface IVehicleService
 {
+    int MaxCapacity { get; }
+
     Task<Vehicle> AddAsync(Vehicle newVehicle);
     Task CommitAsync();
     Task<Vehicle?> GetAsync(int id);
@@ -18,4 +21,5 @@ public interface IVehicleService
     IEnumerable<StatisticsViewModel> GetStatistics();
     bool RegNoParked(string regNo);
     bool IsRegNoChanged(int id, string regNo);
+    Task<int> CountOfVehiclesAsync();
 }

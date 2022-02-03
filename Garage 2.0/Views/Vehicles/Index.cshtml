@@ -1,5 +1,5 @@
 ﻿@using Garage_2._0.Common
-@model IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel>
+@model VehicleIndexViewModel
 
 @{
     ViewData["Title"] = "Parkerat";
@@ -12,41 +12,44 @@
 </p>
 
 
+
 <partial name="_SearchFunction" />
+<p>
+    Platser kvar: @(Model.MaxCapacity-Model.Vehicles.Count())
+</p>
+
 
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.RegNo)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.RegNo)
+            </th>
+             <th>
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Wheels)
+                </th>
+                <th>
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Brand)
+                </th>
+                <th>
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Model)
+                </th>
+            <th>
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.VehicleType)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Wheels)
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckIn)
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Brand)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Model)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Color)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.CheckIn)
-            </th>
-            @*<th>
-                @Html.DisplayNameFor(model => model.CheckOut)
-                </th>*@
+                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckOut)
+                </th>
+
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Vehicles)
         {
             <tr>
                 <td>
