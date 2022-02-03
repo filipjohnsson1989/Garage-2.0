@@ -53,7 +53,6 @@ public class VehicleService : ServiceBase, IVehicleService
         return vehicle;
     }
 
-
     public async Task UpdateAsync(Vehicle newVehicle)
     {
         newVehicle.CheckIn = DateTime.Now;
@@ -89,19 +88,18 @@ public class VehicleService : ServiceBase, IVehicleService
         return vehicleHistory;
     }
 
-    public  IEnumerable<StatisticsViewModel> GetStatistics()
+    public IEnumerable<StatisticsViewModel> GetStatistics()
     {
         var result = _context.Vehicle
          .Where(v => !v.CheckOut.HasValue)
         .GroupBy(v => v.VehicleType)
-        .Select(cv => new
+        .Select(cv => new 
         {
             VehicleType = cv.Key,
             NumOfVehicles = cv.Count(),
             TotalTime = (decimal)cv.Sum(c => EF.Functions.DateDiffMinute(c.CheckIn, c.CheckOut.HasValue ? c.CheckOut.Value : DateTime.Now)),
             NumOfWheels = cv.Sum(c => c.Wheels),
         });
-
 
         var vehicles = result.ToList().Select(v => new StatisticsViewModel()
         {
@@ -113,7 +111,5 @@ public class VehicleService : ServiceBase, IVehicleService
         });
 
         return vehicles;
-
     }
-
 }

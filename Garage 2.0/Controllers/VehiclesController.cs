@@ -5,6 +5,10 @@ using Garage_2._0.Models.Entities;
 using Garage_2._0.Services;
 using AutoMapper;
 using Garage_2._0.Models.ViewModels;
+using Garage_2._0.Data;
+using Microsoft.AspNetCore.Mvc.Rendering;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory;
+using Garage_2._0.Common;
 
 namespace Garage_2._0.Controllers;
 
@@ -14,15 +18,16 @@ public class VehiclesController : Controller
     private readonly IVehicleService _vehicleService;
 
     private readonly IConfiguration _config;
+    private readonly Garage_2_0Context db;
     private readonly double _parkingHourlyCost;
 
-    public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config)
+    public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config, Garage_2_0Context db)
     {
         _mapper = mapper;
         _vehicleService = vehicleService;
 
         _config = config;
-
+        this.db = db;
         if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
             _parkingHourlyCost = timeRate;
         else
@@ -52,9 +57,89 @@ public class VehiclesController : Controller
         return View("ParkingOverView", vehicles);
     }
 
-    public async Task<IActionResult> Search(string regNo, int? vehicleType)
+    public async Task<IActionResult> Search(string regNo, int? vehicleType, string action) 
     {
-        return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.FilterAsync(regNo, vehicleType)));
+        if ((regNo == null) && (vehicleType == null))
+        {
+            return View("ParkingDetailModel"); 
+        }
+        if (action == "Index")
+        {
+            var query = string.IsNullOrWhiteSpace(regNo) ?
+                                         db.Vehicle :
+                                         db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
+
+            query = vehicleType == null ?
+                             query :
+                             query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
+
+            var vehicles = await query.Where(p => p.CheckOut == null).ToListAsync();
+            var viewModel = query.Select(v => new ParkingDetailModel
+            {
+                VehicleType = v.VehicleType,
+                RegNo = v.RegNo,
+                Id = v.Id,
+                Wheels = v.Wheels,
+                Brand = v.Brand,
+                Model = v.Model,
+                CheckIn = v.CheckIn,
+                CheckOut = v.CheckOut
+
+            });
+
+            return View(nameof(Index), await viewModel.ToListAsync());
+        }
+        else if (action == "Overview")
+        {
+            var query = string.IsNullOrWhiteSpace(regNo) ?
+                                          db.Vehicle :
+                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+
+            query = vehicleType == null ?
+                             query :
+                             query.Where(v => (int)v.VehicleType == vehicleType);
+
+
+            var viewModel = query.Select(v => new OverviewModel
+            {
+                Id = v.Id,
+                VehicleType = v.VehicleType,
+                RegNo = v.RegNo,
+                CheckIn = v.CheckIn
+                
+            });
+
+            return View("ParkingOverView");
+        }
+        else if (action == "History")
+        {
+            var query = string.IsNullOrWhiteSpace(regNo) ?
+                                          db.Vehicle :
+                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+
+            query = vehicleType == null ?
+                             query :
+                             query.Where(v => (int)v.VehicleType == vehicleType);
+
+
+            var viewModel = query.Select(v => new HistoryViewModel
+            {
+                VehicleType = v.VehicleType,
+                RegNo = v.RegNo,
+                Id = v.Id,
+                Wheels = v.Wheels,
+                Brand = v.Brand,
+                Model = v.Model,
+                CheckIn = v.CheckIn,
+                CheckOut = v.CheckOut
+            });
+
+            return View(nameof(HistoryViewModel), await viewModel.ToListAsync());
+        }
+        else
+        {
+            return View("Index");
+        }
     }
 
     // GET: Vehicles/Details/5
@@ -239,7 +324,6 @@ public class VehiclesController : Controller
                 throw;
             }
         }
-
     }
     public async Task<IActionResult> History()
     {
