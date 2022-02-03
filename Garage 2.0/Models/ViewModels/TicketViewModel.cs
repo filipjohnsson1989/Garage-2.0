@@ -5,6 +5,8 @@ namespace Garage_2._0.Models.ViewModels
 {
     public class TicketViewModel
     {
+       // private double price;
+
         [Display(Name = "Reg nr")]
         [Required]
         public string RegNo { get; set; }
@@ -31,24 +33,31 @@ namespace Garage_2._0.Models.ViewModels
         public DateTime CheckOut { get; set; }
 
         [Display(Name = "Parkerad tid")]
-        public string ParkingTime 
-        { 
-            get
-            {
-                return Util.ParkingTimeString(CheckIn, DateTime.Now);
-            } 
-        }
-
-        [Display(Name = "Kostnad")]
-        public string Price
+        public string ParkingTime
         {
             get
             {
-                return String.Format(" {0:C2}", Util.ParkingTimeCost(CheckIn, DateTime.Now, HourlyCost));
+                return Util.ParkingTimeString(CheckIn, CheckOut);
             }
+        }
+
+        [Display(Name = "Kostnad")]
+        public double Price { get; set; }
+
+        [Display(Name = "Kostnad")]
+        public string DisplayPrice
+        {
+            get
+            {
+                return String.Format(" {0:C2}", Price);
+            }
+
         }
 
         [Display(Name = "Timkostnad")]
         public double HourlyCost { get; internal set; }
+
+
+
     }
 }
