@@ -23,6 +23,9 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Modell")]
         public string Model { get; set; }
 
+        [Display(Name = "Färg")]
+        public string Color { get; set; }
+
         [Display(Name = "Fordonstyp")]
         public VehicleTypes VehicleType { get; set; }
 

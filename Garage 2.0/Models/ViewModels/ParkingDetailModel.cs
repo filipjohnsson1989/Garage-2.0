@@ -29,5 +29,8 @@ namespace Garage_2._0.Models.ViewModels
 
         [Display(Name = "Utcheckningstid")]
         public DateTime? CheckOut { get; set; }
+
+        [Display(Name = "Färg")]
+        public string? Color { get; set; }
     }
 }

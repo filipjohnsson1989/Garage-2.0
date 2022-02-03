@@ -31,15 +31,17 @@
                 @Html.DisplayNameFor(model => model.Model)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CheckIn)
             </th>
-@*            <th>
+            @*<th>
                 @Html.DisplayNameFor(model => model.CheckOut)
-            </th>*@
-
+                </th>*@
             <th></th>
         </tr>
     </thead>
@@ -60,20 +62,22 @@
                     @Html.DisplayFor(modelItem => item.Model)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.VehicleType)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CheckIn)
                 </td>
-@*                <td>
+                @*                <td>
                     @Html.DisplayFor(modelItem => item.CheckOut)
-                </td>*@
-
+                    </td>*@
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a>
                     @*|
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                        <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
                 </td>
             </tr>
         }
