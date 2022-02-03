@@ -14,16 +14,13 @@
         <form asp-action="Edit">
             <div asp-validation-summary="ModelOnly" class="text-danger"></div>
             <input type="hidden" asp-for="Id" />
-            <div class="form-group">
-                <select asp-for="VehicleType" class="form-control"></select>
-                <span asp-validation-for="VehicleType" class="text-danger"></span>
-            </div>
+
             <div class="form-group">
                 <label asp-for="RegNo" class="control-label"></label>
                 <input asp-for="RegNo" class="form-control" />
                 <span asp-validation-for="RegNo" class="text-danger"></span>
             </div>
-            <input type="hidden" asp-for="Id" />
+            
             <div class="form-group">
                 <label asp-for="Wheels" class="control-label"></label>
                 <input asp-for="Wheels" class="form-control" />
@@ -38,6 +35,11 @@
                 <label asp-for="Model" class="control-label"></label>
                 <input asp-for="Model" class="form-control" />
                 <span asp-validation-for="Model" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
             </div>
             <div class="form-group">
                 <label asp-for="VehicleType" class="control-label"></label>
@@ -56,6 +58,7 @@
                 <input asp-for="CheckOut" class="form-control" />
                 <span asp-validation-for="CheckOut" class="text-danger"></span>
                 </div>*@
+
             <div class="form-group">
                 <input type="submit" value="Spara" class="btn btn-primary" />
             </div>

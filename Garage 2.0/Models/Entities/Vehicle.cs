@@ -26,5 +26,7 @@ namespace Garage_2._0.Models.Entities
 
         public double? ParkingCost { get; set; }
 
+        public string? Color { get; set; }
+
     }
 }

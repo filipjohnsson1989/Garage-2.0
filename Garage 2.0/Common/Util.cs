@@ -2,18 +2,18 @@
 
 namespace Garage_2._0.Common
 {
-    public class Util
+    public static class Util
     {
-        //public static double _hourlyParkingCost { get; private set; }
+        //public  double _hourlyParkingCost { get; private set; }
 
-        //public Util(IConfiguration config)
+        // public Util(IConfiguration config)
         //{
         //    var timeRate = config.GetSection("Garage");
 
         //    //ToDo ParkingTimeCost: Get TimeRate from Config(appsettings)
         //    if (double.TryParse(config["Garage:HourlyCarge"], out double hourlyTimeRate))
         //        _hourlyParkingCost = hourlyTimeRate;
-        //   else
+        //    else
         //        _hourlyParkingCost = 0;
         //}
 
@@ -71,7 +71,7 @@ namespace Garage_2._0.Common
         /// <param name="hourlyCost">The hourly cost</param>
         /// <returns>Returns the calculated cost rounded to two decimal</returns>
         public static double ParkingTimeCost(DateTime checkIn, DateTime checkOut, double hourlyCost)
-        {
+        {     
             TimeSpan timeSpan = checkOut - checkIn;
 
             //Round down to full minutes

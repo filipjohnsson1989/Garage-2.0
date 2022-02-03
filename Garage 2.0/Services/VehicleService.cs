@@ -9,6 +9,11 @@ namespace Garage_2._0.Services;
 
 public class VehicleService : ServiceBase, IVehicleService
 {
+    private readonly int _maxCapacity;
+    public int MaxCapacity { get { return _maxCapacity; } }
+
+
+    public VehicleService(Garage_2_0Context _context) : base(_context)
     private readonly IConfiguration _config;
     private readonly double _parkingHourlyCost;
 
@@ -16,6 +21,7 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public VehicleService(Garage_2_0Context _context, IConfiguration config) : base(_context)
     {
+        _maxCapacity = 10;
         _config = config;
 
         if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
@@ -24,13 +30,17 @@ public class VehicleService : ServiceBase, IVehicleService
             _parkingHourlyCost = 0.0;
     }
 
-    public async Task<Vehicle> AddAsync(Vehicle newVehicle)
+    public async Task<Vehicle?> AddAsync(Vehicle newVehicle)
     {
-        newVehicle.CheckIn = DateTime.Now;
-        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
-        await _context.AddAsync(newVehicle);
-        await _context.SaveChangesAsync();
-        return newVehicle;
+        if (_context.Vehicle.Where(v => !v.CheckOut.HasValue).Count() < _maxCapacity)
+        {
+            newVehicle.CheckIn = DateTime.Now;
+            newVehicle.RegNo = newVehicle.RegNo.ToUpper();
+            await _context.AddAsync(newVehicle);
+            await _context.SaveChangesAsync();
+            return newVehicle;
+        }
+        return null;
     }
 
     public async Task CommitAsync()
@@ -67,9 +77,11 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task UpdateAsync(Vehicle newVehicle)
     {
+       // var date = _context.Vehicle.AsNoTracking().FirstOrDefault...  //om jag behöver slå upp saker för att kolla ex Checkin kolla att det inter är ändrat eller ta det från db
         newVehicle.RegNo = newVehicle.RegNo.ToUpper();
-        //newVehicle.CheckIn = DateTime.Now;
+
         _context.Update(newVehicle);
+        _context.Entry(newVehicle).Property(v => v.CheckIn).IsModified = false; //CheckIn får inte ändras
         await _context.SaveChangesAsync();
     }
 
@@ -132,5 +144,10 @@ public class VehicleService : ServiceBase, IVehicleService
     public bool IsRegNoChanged(int id, string regNo)
     {
         return _context.Vehicle.Any(e => e.CheckOut == null && e.Id == id && e.RegNo != regNo);
+    }
+
+    public async Task<int> CountOfVehiclesAsync()
+    {
+        return await _context.Vehicle.Where(v => !v.CheckOut.HasValue).CountAsync();
     }
 }
