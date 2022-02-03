@@ -105,8 +105,17 @@ public class VehiclesController : Controller
 
         if (ModelState.IsValid)
             {
-                await _vehicleService.AddAsync(vehicle);
-                return RedirectToAction(nameof(Index));
+            if (isAvailable.Size <= isAvailable.MaxCapacity)
+                {
+                    await _vehicleService.AddAsync(vehicle);
+                    isAvailable.Size += 1;
+                    return RedirectToAction(nameof(Index));
+                }
+            else if (isAvailable.Size == isAvailable.MaxCapacity)
+                {
+                    ModelState.AddModelError("Garaget är fullt.", $"{isAvailable.MaxCapacity} fordon får plats i det här garaget.");
+                    return View(_mapper.Map<ParkingDetailModel>(vehicle));
+                }
             }
         
         return View(_mapper.Map<ParkingDetailModel>(vehicle));

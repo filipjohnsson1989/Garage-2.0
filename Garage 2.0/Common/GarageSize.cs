@@ -5,9 +5,9 @@ namespace Garage_2._0.Common
     public class GarageSize
     {
 
-        public double MaxCapacity = 10;
+        public int MaxCapacity = 10;
 
         [Range(0, 10, ErrorMessage = "Kan bara ett visst antal fordon i garaget.")]
-        public double Size = 0;
+        public int Size = 0;
     }
 }
