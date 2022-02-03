@@ -17,7 +17,6 @@ public class VehiclesController : Controller
     private readonly IConfiguration _config;
     private readonly double _parkingHourlyCost;
 
-
     public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config)
     {
         _mapper = mapper;
@@ -25,10 +24,10 @@ public class VehiclesController : Controller
 
         _config = config;
 
-        if (!double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
-            _parkingHourlyCost = 0.0;
-        else
+        if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
             _parkingHourlyCost = timeRate;
+        else
+            _parkingHourlyCost = 0.0;
     }
 
     // GET: Vehicles
@@ -43,6 +42,12 @@ public class VehiclesController : Controller
         };
         return View(nameof(Index), result);
     }
+
+    public IActionResult Statistics()
+    {
+        return View(_mapper.Map<List<StatisticsViewModel>>(_vehicleService.GetStatistics()));
+    }
+
 
     public async Task<IActionResult> Overview()
     {
@@ -92,6 +97,12 @@ public class VehiclesController : Controller
     public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
         var isAvailable = _vehicleService.GarageSize;
+        if (VehicleRegNoParked(vehicle.RegNo))
+        {
+            ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
+            return View(_mapper.Map<ParkingDetailModel>(vehicle));
+        }
+
         if (ModelState.IsValid)
             {
                 await _vehicleService.AddAsync(vehicle);
@@ -127,6 +138,12 @@ public class VehiclesController : Controller
         if (id != vehicle.Id)
         {
             return NotFound();
+        }
+
+        if (_vehicleService.IsRegNoChanged(id, vehicle.RegNo) && VehicleRegNoParked(vehicle.RegNo))
+        {
+            ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
+            return View(_mapper.Map<ParkingDetailModel>(vehicle));
         }
 
         if (ModelState.IsValid)
@@ -179,10 +196,9 @@ public class VehiclesController : Controller
             return NotFound();
         }
 
-
-        vehicle.CheckOut = DateTime.Now;
-
-        return View(_mapper.Map<TicketViewModel>(vehicle));
+        var ticket = _mapper.Map<TicketViewModel>(vehicle);
+        ticket.HourlyCost = _parkingHourlyCost;
+        return View(ticket);
     }
 
     // POST: Vehicles/Delete/5
@@ -227,8 +243,12 @@ public class VehiclesController : Controller
             if (vehicleCheckout == null)
                 return NotFound();
 
-            await _vehicleService.CheckoutAsync(vehicleCheckout);
-            return RedirectToAction(nameof(Overview));
+           await _vehicleService.CheckoutAsync(vehicleCheckout, _parkingHourlyCost);
+
+            var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
+            response.HourlyCost = _parkingHourlyCost;
+
+            return View("CheckoutResponse", response);
         }
         catch (DbUpdateConcurrencyException)
         {
@@ -243,9 +263,18 @@ public class VehiclesController : Controller
         }
 
     }
+    public async Task<IActionResult> History()
+    {
+        return View(nameof(History), _mapper.Map<List<HistoryViewModel>>(await _vehicleService.GetAllHistoryAsync()));
+    }
 
     private bool VehicleExists(int id)
     {
         return _vehicleService.Exists(id);
+    }
+
+    private bool VehicleRegNoParked(string regNo)
+    {
+        return _vehicleService.RegNoParked(regNo);
     }
 }

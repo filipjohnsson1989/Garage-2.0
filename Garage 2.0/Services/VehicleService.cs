@@ -1,8 +1,9 @@
 ﻿using Garage_2._0.Common;
 using Garage_2._0.Data;
 using Garage_2._0.Models.Entities;
-
+using Garage_2._0.Models.ViewModels;
 using Microsoft.EntityFrameworkCore;
+using Microsoft.VisualBasic;
 
 namespace Garage_2._0.Services;
 
@@ -18,6 +19,7 @@ public class VehicleService : ServiceBase, IVehicleService
     public async Task<Vehicle> AddAsync(Vehicle newVehicle)
     {
         newVehicle.CheckIn = DateTime.Now;
+        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
         await _context.AddAsync(newVehicle);
         await _context.SaveChangesAsync();
         return newVehicle;
@@ -50,14 +52,15 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task<Vehicle?> GetAsync(int id)
     {
-        var vehicle= await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
+        var vehicle = await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
         return vehicle;
     }
 
 
     public async Task UpdateAsync(Vehicle newVehicle)
     {
-        newVehicle.CheckIn = DateTime.Now;
+        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
+        //newVehicle.CheckIn = DateTime.Now;
         _context.Update(newVehicle);
         await _context.SaveChangesAsync();
     }
@@ -70,9 +73,11 @@ public class VehicleService : ServiceBase, IVehicleService
         await _context.SaveChangesAsync();
     }
 
-    public async Task CheckoutAsync(Vehicle vehicleCheckout)
+    public async Task CheckoutAsync(Vehicle vehicleCheckout, double parkingHourlyCost)
     {
         vehicleCheckout.CheckOut = DateTime.Now;
+        vehicleCheckout.ParkingCost = Util.ParkingTimeCost(vehicleCheckout.CheckIn, (DateTime)vehicleCheckout.CheckOut, parkingHourlyCost);
+        
         _context.Update(vehicleCheckout);
         await _context.SaveChangesAsync();
     }
@@ -81,6 +86,50 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         return _context.Vehicle.Any(e => e.Id == id);
     }
+    public bool RegNoParked(string regNo)
+    {
+        return _context.Vehicle.Any(e => e.CheckOut == null && e.RegNo == regNo );
+    }
+
+    public async Task<IEnumerable<Vehicle>> GetAllHistoryAsync()
+    {
+        var vehicleHistory = await _context.Vehicle.Where(p => p.CheckOut != null)
+            .OrderBy(o => o.VehicleType)
+            .ThenBy(o => o.RegNo)
+            .ThenByDescending(o => o.CheckIn)
+            .ToListAsync();
+        return vehicleHistory;
+    }
+
+    public  IEnumerable<StatisticsViewModel> GetStatistics()
+    {
+        var result = _context.Vehicle
+         .Where(v => !v.CheckOut.HasValue)
+        .GroupBy(v => v.VehicleType)
+        .Select(cv => new
+        {
+            VehicleType = cv.Key,
+            NumOfVehicles = cv.Count(),
+            TotalTime = (decimal)cv.Sum(c => EF.Functions.DateDiffMinute(c.CheckIn, c.CheckOut.HasValue ? c.CheckOut.Value : DateTime.Now)),
+            NumOfWheels = cv.Sum(c => c.Wheels),
+        });
 
 
+        var vehicles = result.ToList().Select(v => new StatisticsViewModel()
+        {
+            VehicleType = v.VehicleType,
+            NumOfVehicles = v.NumOfVehicles,
+            TotalTime = (int)v.TotalTime,
+            Payment = String.Format(" {0:C2}", Math.Round(v.TotalTime * 10 / 60, 2)),
+            NumOfWheels = v.NumOfWheels,
+        });
+
+        return vehicles;
+
+    }
+
+    public bool IsRegNoChanged(int id, string regNo)
+    {
+        return _context.Vehicle.Any(e => e.CheckOut == null && e.Id == id && e.RegNo != regNo);
+    }
 }

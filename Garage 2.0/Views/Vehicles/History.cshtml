@@ -1,56 +1,53 @@
 ﻿@using Garage_2._0.Common
-@model VehicleIndexViewModel
+@model IEnumerable<Garage_2._0.Models.ViewModels.HistoryViewModel>
 
 @{
-    ViewData["Title"] = "Parkerat";
+    ViewData["Title"] = "Historik";
 }
 
-<h1>Parkerade fordon</h1>
+<h1>Historik över parkerade fordon</h1>
 
-<p>
+@*<p>
     <a asp-action="Create">Checka in nytt fordon</a>
-</p>
+    </p>*@
 
 
 <partial name="_SearchFunction" />
-<p>
-    Platser kvar: @Model.GarageSize.Size
-</p>
 
-<p>
-    Av @Model.GarageSize.MaxCapacity möjliga platser.
-</p>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.RegNo)
-            </th>
-             <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Wheels)
-                </th>
-                <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Brand)
-                </th>
-                <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.Model)
-                </th>
-            <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.VehicleType)
+                @Html.DisplayNameFor(model => model.RegNo)
             </th>
             <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckIn)
+                @Html.DisplayNameFor(model => model.Wheels)
             </th>
             <th>
-                @Html.DisplayNameForInnerType((ParkingDetailModel p) => p.CheckOut)
-                </th>
+                @Html.DisplayNameFor(model => model.Brand)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Model)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckIn)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.CheckOut)
+            </th>
+            <th class="text-end">
+                @Html.DisplayNameFor(model => model.DisplayParkingCost)
+            </th>
 
             <th></th>
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model.Vehicles)
+        @foreach (var item in Model)
         {
             <tr>
                 <td>
@@ -71,15 +68,17 @@
                 <td>
                     @Html.DisplayFor(modelItem => item.CheckIn)
                 </td>
-@*                <td>
+                <td>
                     @Html.DisplayFor(modelItem => item.CheckOut)
-                </td>*@
+                </td>
+                <td class="text-end">
+                    @Html.DisplayFor(modelItem => item.DisplayParkingCost)
+                </td>
 
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> 
-                    @*|
-                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>*@
+                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    <a asp-action="Delete" asp-route-id="@item.Id">Delete</a>
                 </td>
             </tr>
         }

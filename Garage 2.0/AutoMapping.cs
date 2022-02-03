@@ -10,8 +10,10 @@ public class AutoMapping : Profile
     {
         CreateMap<Vehicle, ParkingDetailModel>(); // means you want to map from Vehicle to ParkingDetailModel
         CreateMap<Vehicle, OverviewModel>(); // means you want to map from Vehicle to OverviewModel
-        CreateMap<Vehicle, TicketViewModel>(); // means you want to map from Vehicle to OverviewModel
+        CreateMap<Vehicle, TicketViewModel>() // means you want to map from Vehicle to OverviewModel
+            .ForMember(dest => dest.Price, opt => opt.MapFrom(src => src.ParkingCost));
 
-
+        CreateMap<Vehicle, ResponseViewModel>();
+        CreateMap<Vehicle, HistoryViewModel>();
     }
 }

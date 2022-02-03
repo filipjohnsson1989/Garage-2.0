@@ -6,11 +6,12 @@
 
 <h1>Översikt över Parkerade fordon</h1>
 
+<p>
+    <a asp-action="Create">Checka in nytt fordon</a>
+</p>
+
 <partial name="_SearchFunction" />
 
-<p>
-    <a asp-action="Create">Create New</a>
-</p>
 <table class="table">
     <thead>
         <tr>
@@ -35,10 +36,10 @@
             @*<th>
                 @Html.DisplayNameFor(model => model.CheckOut)
                 </th>*@
-            <th class="text-center">
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.ParkingTime)
             </th>
-            <th class="text-center">
+            <th class="text-end">
                 @Html.DisplayNameFor(model => model.Price)
             </th>
             <th></th>
@@ -76,8 +77,8 @@
                     @Html.DisplayFor(modelItem => item.Price)
                 </td>
                 <td>
-                    <a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |
-                    <a asp-action="Details" asp-route-id="@item.Id">Details</a> |
+                    @*<a asp-action="Edit" asp-route-id="@item.Id">Edit</a> |*@
+                    @*<a asp-action="Details" asp-route-id="@item.Id">Details</a> |*@
                     @*<a asp-action="Delete" asp-route-id="@item.Id">Delete</a> |*@
                     <a asp-action="Checkout" asp-route-id="@item.Id">Cheka ut</a>
                 </td>

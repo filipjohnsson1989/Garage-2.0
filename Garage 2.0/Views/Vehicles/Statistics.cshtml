@@ -1,0 +1,54 @@
+﻿@model IEnumerable<Garage_2._0.Models.ViewModels.StatisticsViewModel>
+
+@{
+    ViewData["Title"] = "Statistik";
+}
+<h1>
+    Statistik för Garage 2.0
+</h1>
+
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                @Html.DisplayNameFor(model => model.VehicleType)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumOfVehicles)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.NumOfWheels)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.TotalTime)
+            </th>
+            <th>
+                @Html.DisplayNameFor(model => model.Payment)
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.VehicleType)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumOfVehicles)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.NumOfWheels)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.TotalTime)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Payment)
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+

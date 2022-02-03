@@ -36,7 +36,7 @@ namespace Garage_2._0.Models.ViewModels
             }
         }
 
-        
+        [Display(Name = "Timkostnad")]
         public double HourlyCost { get; set; }
     }
 }

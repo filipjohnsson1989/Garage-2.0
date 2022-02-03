@@ -56,14 +56,15 @@ namespace Garage_2._0.Common
         /// </summary>
         /// <param name="checkIn">Time for check in</param>
         /// <param name="checkOut">Time for check out</param>
-        /// <param name="timeRate">The hourly cost</param>
+        /// <param name="hourlyCost">The hourly cost</param>
         /// <returns>Returns the calculated cost rounded to two decimal</returns>
-        public static double ParkingTimeCost(DateTime checkIn, DateTime checkOut, double timeRate)
+        public static double ParkingTimeCost(DateTime checkIn, DateTime checkOut, double hourlyCost)
         {
             TimeSpan timeSpan = checkOut - checkIn;
 
-            return Math.Round(timeSpan.TotalMinutes * timeRate / 60, 2);
-            //return Math.Round(timeSpan.TotalMinutes * _hourlyParkingCost / 60, 2); 
+            //Round down to full minutes
+            return Math.Round(Math.Round(timeSpan.TotalMinutes, 0, MidpointRounding.ToZero) * hourlyCost / 60.0, 2);
+            
         }
     }
 }
