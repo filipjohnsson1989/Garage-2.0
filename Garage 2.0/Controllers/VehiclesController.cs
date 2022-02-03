@@ -156,7 +156,8 @@ public class VehiclesController : Controller
                     throw;
                 }
             }
-            return RedirectToAction(nameof(Index));
+            //return RedirectToAction(nameof(Index));
+            return View("EditResponse", _mapper.Map<ResponseViewModel>(vehicle));
         }
         return View(vehicle);
     }
