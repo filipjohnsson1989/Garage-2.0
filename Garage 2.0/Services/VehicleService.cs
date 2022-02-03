@@ -9,20 +9,26 @@ namespace Garage_2._0.Services;
 
 public class VehicleService : ServiceBase, IVehicleService
 {
-    public GarageSize GarageSize { get; set; }
+    private readonly int _maxCapacity;
+    public int MaxCapacity { get { return _maxCapacity; } }
+
 
     public VehicleService(Garage_2_0Context _context) : base(_context)
     {
-        GarageSize = new GarageSize();
+        _maxCapacity = 10;
     }
 
-    public async Task<Vehicle> AddAsync(Vehicle newVehicle)
+    public async Task<Vehicle?> AddAsync(Vehicle newVehicle)
     {
-        newVehicle.CheckIn = DateTime.Now;
-        newVehicle.RegNo = newVehicle.RegNo.ToUpper();
-        await _context.AddAsync(newVehicle);
-        await _context.SaveChangesAsync();
-        return newVehicle;
+        if (_context.Vehicle.Where(v => !v.CheckOut.HasValue).Count() < _maxCapacity)
+        {
+            newVehicle.CheckIn = DateTime.Now;
+            newVehicle.RegNo = newVehicle.RegNo.ToUpper();
+            await _context.AddAsync(newVehicle);
+            await _context.SaveChangesAsync();
+            return newVehicle;
+        }
+        return null;
     }
 
     public async Task CommitAsync()
@@ -69,7 +75,6 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         var vehicle = await _context.Vehicle.FirstOrDefaultAsync(r => r.Id == id);
         _context.Vehicle.Remove(vehicle!);
-        GarageSize.Size -= 1;
         await _context.SaveChangesAsync();
     }
 
@@ -77,7 +82,7 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         vehicleCheckout.CheckOut = DateTime.Now;
         vehicleCheckout.ParkingCost = Util.ParkingTimeCost(vehicleCheckout.CheckIn, (DateTime)vehicleCheckout.CheckOut, parkingHourlyCost);
-        
+
         _context.Update(vehicleCheckout);
         await _context.SaveChangesAsync();
     }
@@ -88,7 +93,7 @@ public class VehicleService : ServiceBase, IVehicleService
     }
     public bool RegNoParked(string regNo)
     {
-        return _context.Vehicle.Any(e => e.CheckOut == null && e.RegNo == regNo );
+        return _context.Vehicle.Any(e => e.CheckOut == null && e.RegNo == regNo);
     }
 
     public async Task<IEnumerable<Vehicle>> GetAllHistoryAsync()
@@ -101,7 +106,7 @@ public class VehicleService : ServiceBase, IVehicleService
         return vehicleHistory;
     }
 
-    public  IEnumerable<StatisticsViewModel> GetStatistics()
+    public IEnumerable<StatisticsViewModel> GetStatistics()
     {
         var result = _context.Vehicle
          .Where(v => !v.CheckOut.HasValue)
@@ -131,5 +136,10 @@ public class VehicleService : ServiceBase, IVehicleService
     public bool IsRegNoChanged(int id, string regNo)
     {
         return _context.Vehicle.Any(e => e.CheckOut == null && e.Id == id && e.RegNo != regNo);
+    }
+
+    public async Task<int> CountOfVehiclesAsync()
+    {
+        return await _context.Vehicle.Where(v => !v.CheckOut.HasValue).CountAsync();
     }
 }

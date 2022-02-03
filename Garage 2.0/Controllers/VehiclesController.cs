@@ -37,7 +37,7 @@ public class VehiclesController : Controller
         var result = new VehicleIndexViewModel()
         {
             Vehicles = vehicles,
-            GarageSize = _vehicleService.GarageSize,
+            MaxCapacity = _vehicleService.MaxCapacity,
 
         };
         return View(nameof(Index), result);
@@ -96,7 +96,6 @@ public class VehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
-        var isAvailable = _vehicleService.GarageSize;
         if (VehicleRegNoParked(vehicle.RegNo))
         {
             ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
@@ -104,20 +103,21 @@ public class VehiclesController : Controller
         }
 
         if (ModelState.IsValid)
+        {
+
+            var resultVehicle = await _vehicleService.AddAsync(vehicle);
+            if (resultVehicle is null)
             {
-            if (isAvailable.Size <= isAvailable.MaxCapacity)
-                {
-                    await _vehicleService.AddAsync(vehicle);
-                    isAvailable.Size += 1;
-                    return RedirectToAction(nameof(Index));
-                }
-            else if (isAvailable.Size == isAvailable.MaxCapacity)
-                {
-                    ModelState.AddModelError("Garaget är fullt.", $"{isAvailable.MaxCapacity} fordon får plats i det här garaget.");
-                    return View(_mapper.Map<ParkingDetailModel>(vehicle));
-                }
+                var CountOfVehicles = await _vehicleService.CountOfVehiclesAsync();
+                //_vehicleService.MaxCapacity
+                ModelState.AddModelError("Garaget är fullt.", "Garaget är fullt!");
+                return View(_mapper.Map<ParkingDetailModel>(vehicle));
             }
-        
+            return RedirectToAction(nameof(Index));
+
+
+        }
+
         return View(_mapper.Map<ParkingDetailModel>(vehicle));
     }
 
@@ -216,8 +216,6 @@ public class VehiclesController : Controller
     public async Task<IActionResult> DeleteConfirmed(int id)
     {
         await _vehicleService.RemoveAsync(id);
-
-        _vehicleService.GarageSize.Size -= 1;
         return RedirectToAction(nameof(Index));
     }
 
@@ -252,7 +250,7 @@ public class VehiclesController : Controller
             if (vehicleCheckout == null)
                 return NotFound();
 
-           await _vehicleService.CheckoutAsync(vehicleCheckout, _parkingHourlyCost);
+            await _vehicleService.CheckoutAsync(vehicleCheckout, _parkingHourlyCost);
 
             var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
             response.HourlyCost = _parkingHourlyCost;

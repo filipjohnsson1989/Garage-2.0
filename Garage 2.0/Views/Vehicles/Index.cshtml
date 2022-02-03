@@ -12,14 +12,13 @@
 </p>
 
 
+
 <partial name="_SearchFunction" />
 <p>
-    Platser kvar: @Model.GarageSize.Size
+    Platser kvar: @(Model.MaxCapacity-Model.Vehicles.Count())
 </p>
 
-<p>
-    Av @Model.GarageSize.MaxCapacity möjliga platser.
-</p>
+
 
 <table class="table">
     <thead>

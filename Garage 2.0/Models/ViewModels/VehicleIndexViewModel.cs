@@ -6,6 +6,6 @@ namespace Garage_2._0.Models.ViewModels
     {
         public IEnumerable<Garage_2._0.Models.ViewModels.ParkingDetailModel> Vehicles { get; set; }
 
-        public GarageSize GarageSize { get; set; } 
+        public int MaxCapacity = 10;
     }
 }

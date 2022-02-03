@@ -6,7 +6,7 @@ namespace Garage_2._0.Services;
 
 public interface IVehicleService
 {
-    GarageSize GarageSize { get; set; }
+    int MaxCapacity { get; }
 
     Task<Vehicle> AddAsync(Vehicle newVehicle);
     Task CommitAsync();
@@ -21,4 +21,5 @@ public interface IVehicleService
     IEnumerable<StatisticsViewModel> GetStatistics();
     bool RegNoParked(string regNo);
     bool IsRegNoChanged(int id, string regNo);
+    Task<int> CountOfVehiclesAsync();
 }
