@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.StatisticsViewModel>
+﻿@using Garage_2._0.Common
+@model IEnumerable<Garage_2._0.Models.ViewModels.StatisticsViewModel>
 
 @{
     ViewData["Title"] = "Statistik";
@@ -42,15 +43,15 @@
                         @Html.DisplayFor(modelItem => item.NumOfWheels)
                     </td>
                     <td class="text-end">
-                        @Html.DisplayFor(modelItem => item.TotalTime)
+                        @Html.DisplayFor(modelItem => item.ParkingTime)
                     </td>
                     <td class="text-end">
-                        @Html.DisplayFor(modelItem => item.Payment)
+                        @Html.DisplayFor(modelItem => item.PaymentText)
                     </td>
                 </tr>
             }
         </tbody>
-        <tbody>
+        <tfoot>
             <tr class="table-dark">
                 <td>
                         @Html.Raw("Antal Fordonstyper: ")
@@ -64,14 +65,14 @@
                         @Model.Sum(item => item.NumOfWheels)
                 </td>
                 <td class="text-end">
-                        @Model.Sum(item => item.TotalTime)
+                        @Util.ParkingTimeString(TimeSpan.FromMinutes(Model.Sum(item => item.TotalTime)))
                 </td>
                 <td class="text-end">
-                        @String.Format(" {0:C2}", Math.Round((decimal)(Model.Sum(item => item.TotalTime) * 10 / 60), 2))
+                        @String.Format(" {0:C2}", Model.Sum(item => item.Payment))
                 </td>
             </tr>
             </tr>
-        </tbody>
+        </tfoot>
     </table>
 </div>
 

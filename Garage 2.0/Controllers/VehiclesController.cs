@@ -14,20 +14,13 @@ public class VehiclesController : Controller
     protected readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
 
-    private readonly IConfiguration _config;
-    private readonly double _parkingHourlyCost;
-
-    public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config)
+    
+    public VehiclesController(IMapper mapper, IVehicleService vehicleService)
     {
         _mapper = mapper;
         _vehicleService = vehicleService;
 
-        _config = config;
-
-        if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
-            _parkingHourlyCost = timeRate;
-        else
-            _parkingHourlyCost = 0.0;
+        
     }
 
     // GET: Vehicles
@@ -36,9 +29,9 @@ public class VehiclesController : Controller
         return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync()));
     }
 
-    public IActionResult Statistics()
+    public async Task<IActionResult> Statistics()
     {
-        return View(_mapper.Map<List<StatisticsViewModel>>(_vehicleService.GetStatistics()));
+        return View(_mapper.Map<List<StatisticsViewModel>>(await _vehicleService.GetStatisticsAsync()));
     }
 
 
@@ -47,7 +40,7 @@ public class VehiclesController : Controller
         var vehicles = _mapper.Map<List<OverviewModel>>(await _vehicleService.GetAllAsync());
         foreach (var vehicle in vehicles)
         {
-            vehicle.HourlyCost = _parkingHourlyCost;
+            vehicle.HourlyCost = _vehicleService.ParkingHourlyCost;
 
         }
         return View("ParkingOverView", vehicles);
@@ -187,7 +180,7 @@ public class VehiclesController : Controller
         }
 
         var ticket = _mapper.Map<TicketViewModel>(vehicle);
-        ticket.HourlyCost = _parkingHourlyCost;
+        ticket.HourlyCost = _vehicleService.ParkingHourlyCost;
         return View(ticket);
     }
 
@@ -231,10 +224,10 @@ public class VehiclesController : Controller
             if (vehicleCheckout == null)
                 return NotFound();
 
-           await _vehicleService.CheckoutAsync(vehicleCheckout, _parkingHourlyCost);
+           await _vehicleService.CheckoutAsync(vehicleCheckout);
 
             var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
-            response.HourlyCost = _parkingHourlyCost;
+            response.HourlyCost = _vehicleService.ParkingHourlyCost;
 
             return View("CheckoutResponse", response);
         }
