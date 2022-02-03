@@ -13,7 +13,6 @@ public class VehicleService : ServiceBase, IVehicleService
     public int MaxCapacity { get { return _maxCapacity; } }
 
 
-    public VehicleService(Garage_2_0Context _context) : base(_context)
     private readonly IConfiguration _config;
     private readonly double _parkingHourlyCost;
 
