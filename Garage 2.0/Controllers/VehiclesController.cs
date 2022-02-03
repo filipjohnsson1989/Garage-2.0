@@ -88,7 +88,7 @@ public class VehiclesController : Controller
     [ValidateAntiForgeryToken]
     public async Task<IActionResult> Create([Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
-        if (VehicleRegNoExists(vehicle.RegNo))
+        if (VehicleRegNoParked(vehicle.RegNo))
         {
             ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
             return View(_mapper.Map<ParkingDetailModel>(vehicle));
@@ -129,10 +129,8 @@ public class VehiclesController : Controller
         {
             return NotFound();
         }
-        //var test = _vehicleService.IsRegNoChanged(id, vehicle.RegNo);
-        //var test2 = VehicleRegNoExists(vehicle.RegNo);
 
-        if (_vehicleService.IsRegNoChanged(id, vehicle.RegNo) && VehicleRegNoExists(vehicle.RegNo))
+        if (_vehicleService.IsRegNoChanged(id, vehicle.RegNo) && VehicleRegNoParked(vehicle.RegNo))
         {
             ModelState.AddModelError("RegNo", $"{vehicle.RegNo.ToUpper()} är redan parkerad i garaget");
             return View(_mapper.Map<ParkingDetailModel>(vehicle));
@@ -263,8 +261,8 @@ public class VehiclesController : Controller
         return _vehicleService.Exists(id);
     }
 
-    private bool VehicleRegNoExists(string regNo)
+    private bool VehicleRegNoParked(string regNo)
     {
-        return _vehicleService.RegNoExists(regNo);
+        return _vehicleService.RegNoParked(regNo);
     }
 }

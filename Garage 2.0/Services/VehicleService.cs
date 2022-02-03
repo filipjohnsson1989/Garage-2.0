@@ -83,7 +83,7 @@ public class VehicleService : ServiceBase, IVehicleService
     {
         return _context.Vehicle.Any(e => e.Id == id);
     }
-    public bool RegNoExists(string regNo)
+    public bool RegNoParked(string regNo)
     {
         return _context.Vehicle.Any(e => e.CheckOut == null && e.RegNo == regNo );
     }
