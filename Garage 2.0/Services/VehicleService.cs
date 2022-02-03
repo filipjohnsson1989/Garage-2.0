@@ -101,7 +101,7 @@ public class VehicleService : ServiceBase, IVehicleService
     public  IEnumerable<StatisticsViewModel> GetStatistics()
     {
         var result = _context.Vehicle
-         .Where(v => !v.CheckOut.HasValue)
+         //.Where(v => !v.CheckOut.HasValue)
         .GroupBy(v => v.VehicleType)
         .Select(cv => new
         {
