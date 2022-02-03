@@ -4,12 +4,12 @@
     ViewData["Title"] = "Editerat";
 }
 
-<h1>Fordoned är sparat</h1>
+<h1>@Html.DisplayFor(model => model.RegNo) är sparat</h1>
 
 <br />
 <div>
     
-    <hr />
+@*    <hr />
     <dl class="row">
         <dt class="col-sm-2">
             @Html.DisplayNameFor(model => model.RegNo)
@@ -18,7 +18,7 @@
             @Html.DisplayFor(model => model.RegNo)
         </dd>  
 
-    </dl>
+    </dl>*@
 
-    <a class="btn btn-primary btn-sm" asp-action="Overview">Tillbaka till listan</a>
+    <a class="btn btn-primary btn-sm" asp-action="Index">Tillbaka till listan</a>
 </div>
