@@ -57,9 +57,11 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task UpdateAsync(Vehicle newVehicle)
     {
+       // var date = _context.Vehicle.AsNoTracking().FirstOrDefault...  //om jag behöver slå upp saker för att kolla ex Checkin kolla att det inter är ändrat eller ta det från db
         newVehicle.RegNo = newVehicle.RegNo.ToUpper();
-        //newVehicle.CheckIn = DateTime.Now;
+
         _context.Update(newVehicle);
+        _context.Entry(newVehicle).Property(v => v.CheckIn).IsModified = false; //CheckIn får inte ändras
         await _context.SaveChangesAsync();
     }
 

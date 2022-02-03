@@ -6,6 +6,7 @@ using Garage_2._0.Services;
 using AutoMapper;
 using Garage_2._0.Models.ViewModels;
 using Garage_2._0.Common;
+using Garage_2._0.Data;
 
 namespace Garage_2._0.Controllers;
 
@@ -23,7 +24,7 @@ public class VehiclesController : Controller
         _vehicleService = vehicleService;
 
         _config = config;
-
+    
         if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
             _parkingHourlyCost = timeRate;
         else
@@ -53,7 +54,7 @@ public class VehiclesController : Controller
         return View("ParkingOverView", vehicles);
     }
 
-    public async Task<IActionResult> Search(string regNo, int? vehicleType)
+    public async Task<IActionResult> Search(string regNo, int? vehicleType)//lägg till varifrån man kommer..
     {
         return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.FilterAsync(regNo, vehicleType)));
     }
@@ -123,7 +124,7 @@ public class VehiclesController : Controller
     // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
     [HttpPost]
     [ValidateAntiForgeryToken]
-    public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType,CheckIn,CheckOut")] Vehicle vehicle)
+    public async Task<IActionResult> Edit(int id, [Bind("RegNo,Id,Wheels,Brand,Model,VehicleType")] Vehicle vehicle)
     {
         if (id != vehicle.Id)
         {
@@ -140,6 +141,8 @@ public class VehiclesController : Controller
         {
             try
             {
+                //sätt vilka värde som skall ändrad
+                //entitystate
                 await _vehicleService.UpdateAsync(vehicle);
             }
             catch (DbUpdateConcurrencyException)
