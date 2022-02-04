@@ -31,7 +31,7 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public async Task<Vehicle?> AddAsync(Vehicle newVehicle)
     {
-        if (_context.Vehicle.Where(v => !v.CheckOut.HasValue).Count() < _maxCapacity)
+        if (await this.CountOfVehiclesAsync() < _maxCapacity)
         {
             newVehicle.CheckIn = DateTime.Now;
             newVehicle.RegNo = newVehicle.RegNo.ToUpper();
@@ -39,7 +39,7 @@ public class VehicleService : ServiceBase, IVehicleService
             await _context.SaveChangesAsync();
             return newVehicle;
         }
-        return null;
+        return default(Vehicle?);
     }
 
     public async Task CommitAsync()
