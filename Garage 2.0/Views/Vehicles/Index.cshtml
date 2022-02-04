@@ -3,7 +3,9 @@
 
 @{
     ViewData["Title"] = "Parkerat";
+    ViewData["searchParent"] = "Index";
 }
+
 
 <h1>Parkerade fordon</h1>
 
@@ -11,9 +13,8 @@
     <a asp-action="Create">Checka in nytt fordon</a>
 </p>
 
+<partial name="_SearchFunction" view-data="ViewData" />
 
-
-<partial name="_SearchFunction" />
 <p>
     Platser kvar: @(Model is null ||Model.Vehicles is null ?0:Model.MaxCapacity-  Model.Vehicles.Count())
 </p>

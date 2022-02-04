@@ -34,7 +34,6 @@ public class VehiclesController : Controller
         {
             Vehicles = vehicles,
             MaxCapacity = _vehicleService.MaxCapacity,
-
         };
         return View(nameof(Index), result);
     }
@@ -102,8 +101,9 @@ public class VehiclesController : Controller
                 Id = v.Id,
                 VehicleType = v.VehicleType,
                 RegNo = v.RegNo,
-                CheckIn = v.CheckIn                
-            });
+                CheckIn = v.CheckIn,
+                HourlyCost = _vehicleService.ParkingHourlyCost
+        });
 
             return View("ParkingOverView", await viewModel.ToListAsync());
         }

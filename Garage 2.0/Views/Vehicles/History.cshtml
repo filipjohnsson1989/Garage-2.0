@@ -3,6 +3,7 @@
 
 @{
     ViewData["Title"] = "Historik";
+    ViewData["searchParent"] = "History";
 }
 
 <h1>Historik över parkerade fordon</h1>
@@ -11,9 +12,8 @@
     <a asp-action="Create">Checka in nytt fordon</a>
     </p>*@
 
-
-<partial name="_SearchFunction" />
-
+@*<partial name="_SearchFunction" />*@
+<partial name="_SearchFunction" view-data="ViewData" />
 
 <table class="table">
     <thead>

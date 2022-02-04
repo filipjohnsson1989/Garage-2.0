@@ -4,7 +4,8 @@
 <form asp-action="Search">
     <div class="input-group mb-3">
         <input type="text" class="form-control" name="regNo" placeholder="Sök på reg nr" />
-        <input  type="hidden" name="action" value="@ViewContext.RouteData.Values["action"]" />
+       @* <input  type="hidden" name="action" value="@ViewContext.RouteData.Values["action"]" />*@
+        <input  type="hidden" name="action" value="@ViewData["searchParent"]" />      
         <div class="input-group-append">
             <select class="form-control" name="vehicleType" asp-items="@Html.GetEnumSelectList<VehicleTypes>()">
                 <option selected="selected" value="">Välj typ</option>

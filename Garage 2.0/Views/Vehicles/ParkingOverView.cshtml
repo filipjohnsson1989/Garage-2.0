@@ -2,6 +2,7 @@
 
 @{
     ViewData["Title"] = "Parkerade fordon";
+    ViewData["searchParent"] = "Overview";
 }
 
 <h1>Översikt över Parkerade fordon</h1>
@@ -10,7 +11,8 @@
     <a asp-action="Create">Checka in nytt fordon</a>
 </p>
 
-<partial name="_SearchFunction" />
+@*<partial name="_SearchFunction" />*@
+<partial name="_SearchFunction" view-data="ViewData" />
 
 <table class="table">
     <thead>

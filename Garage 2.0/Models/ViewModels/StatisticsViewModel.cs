@@ -25,7 +25,10 @@ namespace Garage_2._0.Models.ViewModels
         public string ParkingTime { get { return Util.ParkingTimeString(TimeSpan.FromMinutes(TotalTime)); } }
 
         public int TotalUnpaidTime { get; set; }
+
         public double TotalParkingCost { get; set; }
+
+        [Display(Name = "Betalning")]
         public double Payment { get { return this.TotalParkingCost + Util.ParkingTimeCost(this.TotalUnpaidTime, _parkingHourlyCost); }  }
 
         [Display(Name = "Summa SEK")]
