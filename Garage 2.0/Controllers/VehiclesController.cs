@@ -40,11 +40,10 @@ public class VehiclesController : Controller
         return View(nameof(Index), _mapper.Map<List<ParkingDetailModel>>(await _vehicleService.GetAllAsync()));
     }
 
-    public IActionResult Statistics()
+    public async Task<IActionResult> Statistics()
     {
-        return View(_mapper.Map<List<StatisticsViewModel>>( _vehicleService.GetStatistics()));
+        return View(_mapper.Map<List<StatisticsViewModel>>(await _vehicleService.GetStatisticsAsync()));
     }
-
 
     public async Task<IActionResult> Overview()
     {

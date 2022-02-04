@@ -7,6 +7,10 @@
 
 <h1>Parkera </h1>
 
+<span asp-validation-summary="ModelOnly" class="text-danger">
+    @Html.ValidationSummary()
+</span>
+
 <h4>Fordon</h4>
 <hr />
 <div class="row">
@@ -34,6 +38,11 @@
                 <span asp-validation-for="Model" class="text-danger"></span>
             </div>
             <div class="form-group">
+                <label asp-for="Color" class="control-label"></label>
+                <input asp-for="Color" class="form-control" />
+                <span asp-validation-for="Color" class="text-danger"></span>
+            </div>
+            <div class="form-group">
                 <label asp-for="VehicleType" class="control-label"></label>
                 <select class="form-control" asp-for="VehicleType" asp-items="Html.GetEnumSelectList<VehicleTypes>()">
                     <option selected="selected" value="">Välj typ</option>
@@ -41,21 +50,7 @@
                 <span asp-validation-for="VehicleType" class="text-danger"></span>
             </div>
 
-            @*                        <div class="form-group">
-                <label asp-for="VehicleType" class="control-label"></label>
-                <select asp-for="VehicleType" class="form-control"></select>
-                <span asp-validation-for="VehicleType" class="text-danger"></span>
-                </div>*@
-            @*            <div class="form-group">
-                <label asp-for="CheckIn" class="control-label"></label>
-                <input asp-for="CheckIn" class="form-control" />
-                <span asp-validation-for="CheckIn" class="text-danger"></span>
-                </div>
-                <div class="form-group">
-                <label asp-for="CheckOut" class="control-label"></label>
-                <input asp-for="CheckOut" class="form-control" />
-                <span asp-validation-for="CheckOut" class="text-danger"></span>
-                </div>*@
+
             <div class="form-group">
                 <input type="submit" value="Parkera" class="btn btn-primary" />
             </div>

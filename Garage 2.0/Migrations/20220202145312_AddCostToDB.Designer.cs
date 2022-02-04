@@ -4,6 +4,7 @@ using Garage_2._0.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 #nullable disable
@@ -11,9 +12,10 @@ using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 namespace Garage_2._0.Migrations
 {
     [DbContext(typeof(Garage_2_0Context))]
-    partial class Garage_2_0ContextModelSnapshot : ModelSnapshot
+    [Migration("20220202145312_AddCostToDB")]
+    partial class AddCostToDB
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -39,9 +41,6 @@ namespace Garage_2._0.Migrations
 
                     b.Property<DateTime?>("CheckOut")
                         .HasColumnType("datetime2");
-
-                    b.Property<string>("Color")
-                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Model")
                         .IsRequired()
@@ -69,8 +68,7 @@ namespace Garage_2._0.Migrations
                         {
                             Id = 1,
                             Brand = "Volvo",
-                            CheckIn = new DateTime(2022, 2, 3, 12, 13, 42, 73, DateTimeKind.Local).AddTicks(1484),
-                            Color = "Röd",
+                            CheckIn = new DateTime(2022, 2, 2, 14, 53, 12, 197, DateTimeKind.Local).AddTicks(7207),
                             Model = "V70",
                             RegNo = "ABC123",
                             VehicleType = 0,
@@ -80,8 +78,7 @@ namespace Garage_2._0.Migrations
                         {
                             Id = 2,
                             Brand = "Messerschitt",
-                            CheckIn = new DateTime(2022, 2, 3, 12, 58, 42, 73, DateTimeKind.Local).AddTicks(1545),
-                            Color = "Silver",
+                            CheckIn = new DateTime(2022, 2, 2, 15, 38, 12, 197, DateTimeKind.Local).AddTicks(7254),
                             Model = "KR 200",
                             RegNo = "ABC456",
                             VehicleType = 0,
@@ -91,8 +88,7 @@ namespace Garage_2._0.Migrations
                         {
                             Id = 3,
                             Brand = "Honda",
-                            CheckIn = new DateTime(2022, 2, 3, 12, 43, 42, 73, DateTimeKind.Local).AddTicks(1549),
-                            Color = "Svart",
+                            CheckIn = new DateTime(2022, 2, 2, 15, 23, 12, 197, DateTimeKind.Local).AddTicks(7258),
                             Model = "CB 125T",
                             RegNo = "ABC789",
                             VehicleType = 4,
@@ -102,8 +98,7 @@ namespace Garage_2._0.Migrations
                         {
                             Id = 4,
                             Brand = "MAN",
-                            CheckIn = new DateTime(2022, 2, 3, 13, 8, 42, 73, DateTimeKind.Local).AddTicks(1552),
-                            Color = "Blå",
+                            CheckIn = new DateTime(2022, 2, 2, 15, 48, 12, 197, DateTimeKind.Local).AddTicks(7261),
                             Model = "X-2000",
                             RegNo = "DEF123",
                             VehicleType = 2,
@@ -113,8 +108,7 @@ namespace Garage_2._0.Migrations
                         {
                             Id = 5,
                             Brand = "Nautor Swan",
-                            CheckIn = new DateTime(2022, 1, 4, 13, 13, 42, 73, DateTimeKind.Local).AddTicks(1555),
-                            Color = "Vit",
+                            CheckIn = new DateTime(2022, 1, 3, 15, 53, 12, 197, DateTimeKind.Local).AddTicks(7264),
                             Model = "Swan 66",
                             RegNo = "DEF456",
                             VehicleType = 1,

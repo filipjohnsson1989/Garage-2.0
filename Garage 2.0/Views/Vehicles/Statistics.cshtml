@@ -1,4 +1,5 @@
-﻿@model IEnumerable<Garage_2._0.Models.ViewModels.StatisticsViewModel>
+﻿@using Garage_2._0.Common
+@model IEnumerable<Garage_2._0.Models.ViewModels.StatisticsViewModel>
 
 @{
     ViewData["Title"] = "Statistik";
@@ -7,48 +8,71 @@
     Statistik för Garage 2.0
 </h1>
 
+<div class="table-responsive">
+    <table class="table  table-striped">
+        <thead>
+            <tr class="table-dark">
+                <th class="align-items-center">
+                    @Html.DisplayNameFor(model => model.VehicleType)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumOfVehicles)
+                </th>
+                <th>
+                    @Html.DisplayNameFor(model => model.NumOfWheels)
+                </th>
+                <th class="text-end">
+                    @Html.DisplayNameFor(model => model.TotalTime)
+                </th>
+                <th class="text-end">
+                    @Html.DisplayNameFor(model => model.Payment)
+                </th>
+            </tr>
+        </thead>
+        <tbody>
+            @foreach (var item in Model)
+            {
+                <tr>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.VehicleType)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumOfVehicles)
+                    </td>
+                    <td>
+                        @Html.DisplayFor(modelItem => item.NumOfWheels)
+                    </td>
+                    <td class="text-end">
+                        @Html.DisplayFor(modelItem => item.ParkingTime)
+                    </td>
+                    <td class="text-end">
+                        @Html.DisplayFor(modelItem => item.PaymentText)
+                    </td>
+                </tr>
+            }
+        </tbody>
+        <tfoot>
+            <tr class="table-dark">
+                <td>
+                        @Html.Raw("Antal Fordonstyper: ")
+                        @Model.Count()
+                </td>
+                <td>
 
-<table class="table">
-    <thead>
-        <tr>
-            <th>
-                @Html.DisplayNameFor(model => model.VehicleType)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumOfVehicles)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.NumOfWheels)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.TotalTime)
-            </th>
-            <th>
-                @Html.DisplayNameFor(model => model.Payment)
-            </th>
-        </tr>
-    </thead>
-    <tbody>
-        @foreach (var item in Model)
-        {
-            <tr>
-                <td>
-                    @Html.DisplayFor(modelItem => item.VehicleType)
+                        @Model.Sum(item => item.NumOfVehicles)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.NumOfVehicles)
+                        @Model.Sum(item => item.NumOfWheels)
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.NumOfWheels)
+                <td class="text-end">
+                        @Util.ParkingTimeString(TimeSpan.FromMinutes(Model.Sum(item => item.TotalTime)))
                 </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.TotalTime)
-                </td>
-                <td>
-                    @Html.DisplayFor(modelItem => item.Payment)
+                <td class="text-end">
+                        @String.Format(" {0:C2}", Model.Sum(item => item.Payment))
                 </td>
             </tr>
-        }
-    </tbody>
-</table>
+            </tr>
+        </tfoot>
+    </table>
+</div>
 

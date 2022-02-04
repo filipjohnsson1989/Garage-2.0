@@ -21,6 +21,9 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Modell")]
         public string Model { get; set; }
 
+        [Display(Name = "Färg")]
+        public string? Color { get; set; }
+
         [Display(Name = "Typ")]
         public VehicleTypes VehicleType { get; set; }
 
@@ -29,5 +32,11 @@ namespace Garage_2._0.Models.ViewModels
 
         [Display(Name = "Utcheckningstid")]
         public DateTime? CheckOut { get; set; }
+
+        [Display(Name = "Parkeringskostnad")]
+        public double? ParkingCost { get; set; }
+
+        [Display(Name = "Parkeringskostnad")]
+        public string DisplayParkingCost => $" {ParkingCost:C2}";
     }
 }

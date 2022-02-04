@@ -9,7 +9,7 @@
 
 @*<p>
     <a asp-action="Create">Checka in nytt fordon</a>
-</p>*@
+    </p>*@
 
 
 <partial name="_SearchFunction" />
@@ -31,6 +31,9 @@
                 @Html.DisplayNameFor(model => model.Model)
             </th>
             <th>
+                @Html.DisplayNameFor(model => model.Color)
+            </th>
+            <th>
                 @Html.DisplayNameFor(model => model.VehicleType)
             </th>
             <th>
@@ -38,6 +41,9 @@
             </th>
             <th>
                 @Html.DisplayNameFor(model => model.CheckOut)
+            </th>
+            <th class="text-end">
+                @Html.DisplayNameFor(model => model.DisplayParkingCost)
             </th>
 
             <th></th>
@@ -60,6 +66,9 @@
                     @Html.DisplayFor(modelItem => item.Model)
                 </td>
                 <td>
+                    @Html.DisplayFor(modelItem => item.Color)
+                </td>
+                <td>
                     @Html.DisplayFor(modelItem => item.VehicleType)
                 </td>
                 <td>
@@ -67,6 +76,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CheckOut)
+                </td>
+                <td class="text-end">
+                    @Html.DisplayFor(modelItem => item.DisplayParkingCost)
                 </td>
 
                 <td>

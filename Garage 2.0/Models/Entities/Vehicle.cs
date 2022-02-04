@@ -23,5 +23,10 @@ namespace Garage_2._0.Models.Entities
         public DateTime CheckIn { get; set; }
 
         public DateTime? CheckOut { get; set; }
+
+        public double? ParkingCost { get; set; }
+
+        public string? Color { get; set; }
+
     }
 }
