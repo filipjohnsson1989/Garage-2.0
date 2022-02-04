@@ -77,6 +77,7 @@ public class VehiclesController : Controller
                 Wheels = v.Wheels,
                 Brand = v.Brand,
                 Model = v.Model,
+                Color = v.Color,
                 CheckIn = v.CheckIn,
                 CheckOut = v.CheckOut
 
@@ -89,11 +90,11 @@ public class VehiclesController : Controller
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
                                           db.Vehicle :
-                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
 
             query = vehicleType == null ?
                              query :
-                             query.Where(v => (int)v.VehicleType == vehicleType);
+                             query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
 
 
             var viewModel = query.Select(v => new OverviewModel
@@ -101,8 +102,7 @@ public class VehiclesController : Controller
                 Id = v.Id,
                 VehicleType = v.VehicleType,
                 RegNo = v.RegNo,
-                CheckIn = v.CheckIn
-                
+                CheckIn = v.CheckIn                
             });
 
             return View("ParkingOverView", await viewModel.ToListAsync());
@@ -127,14 +127,16 @@ public class VehiclesController : Controller
                 Brand = v.Brand,
                 Model = v.Model,
                 CheckIn = v.CheckIn,
-                CheckOut = v.CheckOut
+                CheckOut = v.CheckOut,
+                ParkingCost = v.ParkingCost
             });
 
-            return View(nameof(HistoryViewModel), await viewModel.ToListAsync());
+            return View("History", await viewModel.ToListAsync());
         }
         else
         {
-            return View("ParkingOverView");
+            return RedirectToAction("Index","Home");
+            //return View("ParkingOverView");
         }
     }
 
@@ -186,8 +188,8 @@ public class VehiclesController : Controller
                 ModelState.AddModelError("Garaget är fullt.", "Garaget är fullt!");
                 return View(_mapper.Map<ParkingDetailModel>(vehicle));
             }
-            return RedirectToAction(nameof(Index));
-
+            
+            return View("CheckInResponse", _mapper.Map<ParkingDetailModel>(vehicle));
 
         }
 

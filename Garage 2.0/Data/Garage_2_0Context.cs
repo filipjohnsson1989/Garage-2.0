@@ -23,11 +23,11 @@ namespace Garage_2._0.Data
             base.OnModelCreating(modelBuilder);
             modelBuilder.Entity<Vehicle>()
                 .HasData(
-                new Vehicle { Id = 1, VehicleType = Common.VehicleTypes.Car, RegNo = "ABC123", Brand = "Volvo", Model = "V70", Wheels = 4, CheckIn = DateTime.Now.AddHours(-1), Color="Röd" },
-                new Vehicle { Id = 2, VehicleType = Common.VehicleTypes.Car, RegNo = "ABC456", Brand = "Messerschitt", Model = "KR 200", Wheels = 3, CheckIn = DateTime.Now.AddMinutes(-15), Color = "Silver" },
+                new Vehicle { Id = 1, VehicleType = Common.VehicleTypes.Bil, RegNo = "ABC123", Brand = "Volvo", Model = "V70", Wheels = 4, CheckIn = DateTime.Now.AddHours(-1), Color="Röd" },
+                new Vehicle { Id = 2, VehicleType = Common.VehicleTypes.Bil, RegNo = "ABC456", Brand = "Messerschitt", Model = "KR 200", Wheels = 3, CheckIn = DateTime.Now.AddMinutes(-15), Color = "Silver" },
                 new Vehicle { Id = 3, VehicleType = Common.VehicleTypes.MC, RegNo = "ABC789", Brand = "Honda", Model = "CB 125T", Wheels = 2, CheckIn = DateTime.Now.AddMinutes(-30), Color = "Svart" },
-                new Vehicle { Id = 4, VehicleType = Common.VehicleTypes.Bus, RegNo = "DEF123", Brand = "MAN", Model = "X-2000", Wheels = 6, CheckIn = DateTime.Now.AddMinutes(-5), Color = "Blå" },
-                new Vehicle { Id = 5, VehicleType = Common.VehicleTypes.Boat, RegNo = "DEF456", Brand = "Nautor Swan", Model = "Swan 66", Wheels = 0, CheckIn = DateTime.Now.AddDays(-30), Color = "Vit" }
+                new Vehicle { Id = 4, VehicleType = Common.VehicleTypes.Buss, RegNo = "DEF123", Brand = "MAN", Model = "X-2000", Wheels = 6, CheckIn = DateTime.Now.AddMinutes(-5), Color = "Blå" },
+                new Vehicle { Id = 5, VehicleType = Common.VehicleTypes.Båt, RegNo = "SE456", Brand = "Nautor Swan", Model = "Swan 66", Wheels = 0, CheckIn = DateTime.Now.AddDays(-30), Color = "Vit" }
                 );
         }
     }

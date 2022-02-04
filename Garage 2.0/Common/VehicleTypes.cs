@@ -2,13 +2,13 @@
 {
     public enum VehicleTypes
     {
-        Car,
+        Bil,
 
-        Boat,
+        Båt,
 
-        Bus,
+        Buss,
 
-        Bicycle,
+        Cykel,
 
         MC
     }
