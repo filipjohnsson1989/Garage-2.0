@@ -15,10 +15,8 @@
 
 <partial name="_SearchFunction" />
 <p>
-    Platser kvar: @(Model.MaxCapacity-Model.Vehicles.Count())
+    Platser kvar: @(Model is null ||Model.Vehicles is null ?0:Model.MaxCapacity-  Model.Vehicles.Count())
 </p>
-
-
 
 <table class="table">
     <thead>

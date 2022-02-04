@@ -23,8 +23,7 @@ public class VehiclesController : Controller
     {
         _mapper = mapper;
         _vehicleService = vehicleService;
-
-        
+        this.db = db;
     }
 
     // GET: Vehicles
@@ -58,10 +57,7 @@ public class VehiclesController : Controller
 
     public async Task<IActionResult> Search(string regNo, int? vehicleType, string action) 
     {
-        if ((regNo == null) && (vehicleType == null))
-        {
-            return View("ParkingDetailModel"); 
-        }
+       
         if (action == "Index")
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
@@ -85,8 +81,9 @@ public class VehiclesController : Controller
                 CheckOut = v.CheckOut
 
             });
+            var view = new VehicleIndexViewModel {Vehicles = await viewModel.ToListAsync()};
 
-            return View(nameof(Index), await viewModel.ToListAsync());
+            return View(nameof(Index), view);
         }
         else if (action == "Overview")
         {
@@ -108,17 +105,17 @@ public class VehiclesController : Controller
                 
             });
 
-            return View("ParkingOverView");
+            return View("ParkingOverView", await viewModel.ToListAsync());
         }
         else if (action == "History")
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
                                           db.Vehicle :
-                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo));
+                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut != null);
 
             query = vehicleType == null ?
                              query :
-                             query.Where(v => (int)v.VehicleType == vehicleType);
+                             query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut != null);
 
 
             var viewModel = query.Select(v => new HistoryViewModel
@@ -137,7 +134,7 @@ public class VehiclesController : Controller
         }
         else
         {
-            return View("Index");
+            return View("ParkingOverView");
         }
     }
 
