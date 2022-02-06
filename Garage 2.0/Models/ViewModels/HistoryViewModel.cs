@@ -33,10 +33,19 @@ namespace Garage_2._0.Models.ViewModels
         [Display(Name = "Utcheckningstid")]
         public DateTime? CheckOut { get; set; }
 
+        [Display(Name = "Parkerad tid")]
+        public string ParkingTime
+        {
+            get
+            {
+                return Util.ParkingTimeString(CheckIn, (DateTime)CheckOut);
+            }
+        }
+
         [Display(Name = "Parkeringskostnad")]
         public double? ParkingCost { get; set; }
 
-        [Display(Name = "Parkeringskostnad")]
+        [Display(Name = "Kostnad")]
         public string DisplayParkingCost => $" {ParkingCost:C2}";
     }
 }

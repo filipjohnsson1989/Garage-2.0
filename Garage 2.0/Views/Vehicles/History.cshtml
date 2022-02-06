@@ -42,6 +42,9 @@
             <th>
                 @Html.DisplayNameFor(model => model.CheckOut)
             </th>
+            <th >
+                @Html.DisplayNameFor(model => model.ParkingTime)
+            </th>
             <th class="text-end">
                 @Html.DisplayNameFor(model => model.DisplayParkingCost)
             </th>
@@ -76,6 +79,9 @@
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.CheckOut)
+                </td>
+                <td class="text-end">
+                    @Html.DisplayFor(modelItem => item.ParkingTime)
                 </td>
                 <td class="text-end">
                     @Html.DisplayFor(modelItem => item.DisplayParkingCost)
