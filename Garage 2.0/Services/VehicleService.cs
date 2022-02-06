@@ -20,13 +20,18 @@ public class VehicleService : ServiceBase, IVehicleService
 
     public VehicleService(Garage_2_0Context _context, IConfiguration config) : base(_context)
     {
-        _maxCapacity = 10;
+        //_maxCapacity = 10;
         _config = config;
 
         if (double.TryParse(_config["Garage:HourlyCarge"], out double timeRate))
             _parkingHourlyCost = timeRate;
         else
             _parkingHourlyCost = 0.0;
+
+        if (int.TryParse(_config["Garage:MaxCapacity"], out int maxCapacity))
+            _maxCapacity = maxCapacity;
+        else
+            _maxCapacity = 0;
     }
 
     public async Task<Vehicle?> AddAsync(Vehicle newVehicle)
@@ -148,5 +153,10 @@ public class VehicleService : ServiceBase, IVehicleService
     public async Task<int> CountOfVehiclesAsync()
     {
         return await _context.Vehicle.Where(v => !v.CheckOut.HasValue).CountAsync();
+    }
+
+    public async Task<int> FreeParkingSpots()
+    {
+        return _maxCapacity - await CountOfVehiclesAsync();
     }
 }

@@ -24,4 +24,5 @@ public interface IVehicleService
     bool RegNoParked(string regNo);
     bool IsRegNoChanged(int id, string regNo);
     Task<int> CountOfVehiclesAsync();
+    Task<int> FreeParkingSpots();
 }

@@ -15,9 +15,9 @@ public class VehiclesController : Controller
     protected readonly IMapper _mapper;
     private readonly IVehicleService _vehicleService;
 
-   
+
     private readonly Garage_2_0Context db;
-  
+
 
     public VehiclesController(IMapper mapper, IVehicleService vehicleService, IConfiguration config, Garage_2_0Context db)
     {
@@ -34,6 +34,7 @@ public class VehiclesController : Controller
         {
             Vehicles = vehicles,
             MaxCapacity = _vehicleService.MaxCapacity,
+            FreeParkingSpots = await _vehicleService.FreeParkingSpots()
         };
         return View(nameof(Index), result);
     }
@@ -54,20 +55,20 @@ public class VehiclesController : Controller
         return View("ParkingOverView", vehicles);
     }
 
-    public async Task<IActionResult> Search(string regNo, int? vehicleType, string action) 
+    public async Task<IActionResult> Search(string regNo, int? vehicleType, string action)
     {
-       
+
         if (action == "Index")
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
-                                         db.Vehicle :
+                                         db.Vehicle.Where(v => v.CheckOut == null):
                                          db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
 
             query = vehicleType == null ?
-                             query :
+                             query.Where(v => v.CheckOut == null):
                              query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
 
-            var vehicles = await query.Where(p => p.CheckOut == null).ToListAsync();
+            //var vehicles = query.Where(p => p.CheckOut == null);
             var viewModel = query.Select(v => new ParkingDetailModel
             {
                 VehicleType = v.VehicleType,
@@ -81,18 +82,24 @@ public class VehiclesController : Controller
                 CheckOut = v.CheckOut
 
             });
-            var view = new VehicleIndexViewModel {Vehicles = await viewModel.ToListAsync()};
+                //.Where(v => v.CheckOut == null);
+            var view = new VehicleIndexViewModel
+            {
+                Vehicles = await viewModel.ToListAsync(),
+                MaxCapacity = _vehicleService.MaxCapacity,
+                FreeParkingSpots = await _vehicleService.FreeParkingSpots()
+            };
 
             return View(nameof(Index), view);
         }
         else if (action == "Overview")
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
-                                          db.Vehicle :
+                                          db.Vehicle.Where(v => v.CheckOut == null) :
                                           db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut == null);
 
             query = vehicleType == null ?
-                             query :
+                             query.Where(v => v.CheckOut == null) :
                              query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut == null);
 
 
@@ -103,18 +110,18 @@ public class VehiclesController : Controller
                 RegNo = v.RegNo,
                 CheckIn = v.CheckIn,
                 HourlyCost = _vehicleService.ParkingHourlyCost
-        });
+            });
 
             return View("ParkingOverView", await viewModel.ToListAsync());
         }
         else if (action == "History")
         {
             var query = string.IsNullOrWhiteSpace(regNo) ?
-                                          db.Vehicle :
+                                          db.Vehicle.Where(v => v.CheckOut != null) :
                                           db.Vehicle.Where(v => v.RegNo.StartsWith(regNo) && v.CheckOut != null);
 
             query = vehicleType == null ?
-                             query :
+                             query.Where(v => v.CheckOut != null) :
                              query.Where(v => (int)v.VehicleType == vehicleType && v.CheckOut != null);
 
 
@@ -135,7 +142,7 @@ public class VehiclesController : Controller
         }
         else
         {
-            return RedirectToAction("Index","Home");
+            return RedirectToAction("Index", "Home");
             //return View("ParkingOverView");
         }
     }
@@ -188,7 +195,7 @@ public class VehiclesController : Controller
                 ModelState.AddModelError("Garaget är fullt.", "Garaget är fullt!");
                 return View(_mapper.Map<ParkingDetailModel>(vehicle));
             }
-            
+
             return View("CheckInResponse", _mapper.Map<ParkingDetailModel>(vehicle));
 
         }
@@ -328,7 +335,7 @@ public class VehiclesController : Controller
             if (vehicleCheckout == null)
                 return NotFound();
 
-           await _vehicleService.CheckoutAsync(vehicleCheckout);
+            await _vehicleService.CheckoutAsync(vehicleCheckout);
 
             var response = _mapper.Map<ResponseViewModel>(vehicleCheckout);
             response.HourlyCost = _vehicleService.ParkingHourlyCost;
